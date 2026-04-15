@@ -36,7 +36,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Sections */
-        .section-title { background: #fce4ec; color: #b03060; padding: 15px; font-weight: bold; border-left: 8px solid #b03060; margin: 30px 0 15px 0; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: space-between; }
+        .section-title { background: #fce4ec; color: #b03060; padding: 15px; font-weight: bold; border-left: 8px solid #b03060; margin: 30px 0 15px 0; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: space-between; page-break-after: avoid;}
         .sub-title { font-weight: bold; color: #b03060; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         
         .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 15px; }
@@ -51,15 +51,15 @@
         td { border: 1px solid #eee; padding: 10px; text-align: center; vertical-align: middle; }
         .td-left { text-align: left; padding-left: 15px; width: 50%; }
 
-        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 13px; background: white;}
+        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 13px; background: white; page-break-inside: avoid;}
         .academic-table thead th { border-bottom: 2px solid #000; border-top: 2px solid #000; background: #fdfdfd; text-align: center; font-weight: bold; padding: 10px; }
         .academic-table tbody td { border-bottom: 1px solid #ddd; padding: 6px; text-align: center; }
         .academic-table tbody tr:last-child td { border-bottom: 2px solid #000; }
         .academic-table .row-header { text-align: left; padding-left: 10px; font-weight: normal; }
         .academic-table .group-header { background-color: #f0f8ff; font-weight: bold; text-align: left; padding-left: 10px; color: #0d47a1; }
-        .academic-table th, .academic-table td { font-size: 12px; } /* Taille réduite pour contenir plus d'infos */
+        .academic-table th, .academic-table td { font-size: 12px; } 
 
-        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-bottom: 15px; line-height: 1.4; font-style: italic; }
+        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-bottom: 15px; line-height: 1.4; font-style: italic; page-break-inside: avoid; }
 
         .check-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
         .check-item { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
@@ -69,14 +69,14 @@
         .btn-save:hover { background: #880e4f; transform: translateY(-2px); }
         
         /* Stats & Pie Charts */
-        .stat-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; }
+        .stat-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; page-break-inside: avoid;}
         .stat-title { font-weight: bold; color: #555; margin-bottom: 15px; font-size: 14px; border-bottom: 2px solid #b03060; display: inline-block; width: 100%; text-align: center; }
         .pie-box { display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; width: 100%; gap: 20px; }
         
         /* TABLEAU DE BORD IMAGE */
-        .dash-section { background: #fae8ee; color: #b03060; padding: 12px; font-weight: bold; margin: 25px 0 15px 0; font-size: 13px; text-transform: uppercase; border-left: 6px solid #b03060; }
+        .dash-section { background: #fae8ee; color: #b03060; padding: 12px; font-weight: bold; margin: 25px 0 15px 0; font-size: 13px; text-transform: uppercase; border-left: 6px solid #b03060; page-break-after: avoid;}
         .dash-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .dash-card { background: white; border: 1px solid #e6e6e6; border-radius: 6px; padding: 15px; flex: 1; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .dash-card { background: white; border: 1px solid #e6e6e6; border-radius: 6px; padding: 15px; flex: 1; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); page-break-inside: avoid;}
         .dash-title { border-bottom: 2px solid #880e4f; padding-bottom: 8px; margin-bottom: 15px; text-align: center; font-weight: bold; font-size: 13px; color: #444; }
         .dash-pie-box { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .dash-pie-box svg { flex-shrink: 0; }
@@ -368,7 +368,7 @@
     </div>
 
     <div id="content-3" class="form-content">
-        <button type="button" class="btn-excel admin-only" style="margin-bottom: 20px; width: 100%; background: #0288d1; font-size: 14px;" onclick="window.exportTab3Word()">📥 TÉLÉCHARGER TOUTES LES DONNÉES DE L'ONGLET 3 (WORD / PDF)</button>
+        <button type="button" class="btn-excel admin-only" style="margin-bottom: 20px; width: 100%; background: #0288d1; font-size: 14px;" onclick="window.exportTab3Word()">📥 TÉLÉCHARGER TOUTES LES DONNÉES DE L'ONGLET 3 (PDF COMPLET)</button>
 
         <div class="section-title">TAUX DE PARTICIPATION</div>
         <div class="row" style="align-items: center;">
@@ -1020,7 +1020,7 @@
         let other_prac_avg = window.getAvg(database.filter(d=>d.service==='Autres'), 'scorePratique');
 
         // Corrélation 3: Attitude Positive vs Pratique (Simplification)
-        // On calcule le % de pratique adéquate chez ceux qui ont une attitude > 3.5
+        // On calcule le % de pratique adéquate chez ceux qui ont une attitude >3.5
         let att_pos_group = database.filter(d => parseFloat(d.scoreAttitude) > 3.5);
         let att_neg_group = database.filter(d => parseFloat(d.scoreAttitude) <= 3.5);
         
@@ -1160,38 +1160,9 @@
 
     function showToast(m) { var x = document.getElementById("toast"); x.className="show"; x.innerText=m; setTimeout(()=>x.className=x.className.replace("show",""),3000); }
     
-    // Export Word Doc
-    window.downloadAsDoc = function(elementId, filename) {
-        var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export</title></head><body>";
-        var postHtml = "</body></html>";
-        
-        // Cacher temporairement les boutons d'export dans le document généré
-        var clone = document.getElementById(elementId).cloneNode(true);
-        var btns = clone.querySelectorAll('.btn-excel');
-        btns.forEach(btn => btn.parentNode.removeChild(btn));
-        
-        var html = preHtml + clone.innerHTML + postHtml;
-
-        var blob = new Blob(['\ufeff', html], {
-            type: 'application/msword'
-        });
-        
-        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-        var downloadLink = document.createElement("a");
-        document.body.appendChild(downloadLink);
-        
-        if(navigator.msSaveOrOpenBlob ){
-            navigator.msSaveOrOpenBlob(blob, filename);
-        }else{
-            downloadLink.href = url;
-            downloadLink.download = filename;
-            downloadLink.click();
-        }
-        document.body.removeChild(downloadLink);
-    };
-
+    // --- FONCTION EXPORT PDF COMPLET (ONGLET 3) ---
     window.exportTab3Word = function() {
-        showToast("Création du PDF en cours, veuillez patienter...");
+        showToast("Génération du PDF complet, veuillez patienter...");
         
         // On cible l'onglet 3
         const element = document.getElementById('content-3');
@@ -1200,23 +1171,29 @@
         const btnExcel = element.querySelector('.btn-excel');
         if (btnExcel) btnExcel.style.display = 'none';
 
-        // Options corrigées pour supprimer le flou
+        // Options optimisées pour un document complet (Pagination haute qualité)
         const opt = {
-            margin:       10,
-            filename:     'Resultats_Onglet_3.pdf',
-            image:        { type: 'png' }, // Utilisation du PNG pour éviter la compression floue
-            html2canvas:  { scale: 4, useCORS: true }, // Scale à 4 pour une image très haute résolution
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            margin:       10, // Marges réduites pour plus de contenu
+            filename:     'Resultats_Complets_Memoire.pdf',
+            image:        { type: 'jpeg', quality: 0.98 }, // Haute qualité
+            html2canvas:  { 
+                scale: 3, // Échelle 3 pour un bon compromis qualité/vitesse
+                useCORS: true, 
+                scrollY: 0, // S'assurer de capturer le tout même si scindé
+                logging: false
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Évite de couper les tableaux (Option clé)
         };
 
         // Génération et téléchargement du PDF
         html2pdf().set(opt).from(element).save().then(() => {
             // On remet le bouton bleu à sa place une fois le PDF téléchargé
             if (btnExcel) btnExcel.style.display = 'block';
-            showToast("PDF téléchargé !");
+            showToast("PDF téléchargé avec succès !");
         });
     };
-    
+
     window.exportTab4 = function() {
         showToast("Préparation de la discussion...");
         window.downloadAsDoc('content-4', 'Discussion_Memoire_Makala.doc');
