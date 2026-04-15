@@ -405,8 +405,11 @@
             </div>
         </div>
         <div id="int-age" class="interpretation-text"></div>
-        <div id="socio-demo-cross-tables"></div>
+        
+        <!-- Conteneur pour le Tableau I Consolidé (Modèle Word) -->
         <div id="socio-demo-summary"></div>
+        
+        <div id="socio-demo-cross-tables"></div>
 
         <div class="section-title">NIVEAUX DE CONNAISSANCES</div>
         <div class="dash-row">
@@ -798,11 +801,11 @@
         if(total === 0) return;
 
         // --- Calculs Supplémentaires ---
-        const getP = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1) : 0;
+        const getP = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1).replace('.', ',') : "0,0"; // Format académique avec virgule
         
         // Moyenne d'âge
         const totalAgeSum = database.reduce((acc, curr) => acc + (parseInt(curr.age_participant) || 0), 0);
-        const meanAge = (totalAgeSum / total).toFixed(1);
+        const meanAge = (totalAgeSum / total).toFixed(1).replace('.', ',');
 
         // Ancienneté groupée
         let anc_junior = database.filter(d => d.anciennete < 5).length;
@@ -828,7 +831,7 @@
                 <tbody>
                     <tr><td class="row-header">Accepté (Inclus dans l'étude)</td><td>${accepted}</td><td>${getP(accepted, total)}</td></tr>
                     <tr><td class="row-header">Refusé / Exclus</td><td>${refused}</td><td>${getP(refused, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total Sollicité</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total Sollicité</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
@@ -836,24 +839,35 @@
             </div>
         `;
 
-        // --- 2. CARACTÉRISTIQUES SOCIO-DÉMOGRAPHIQUES ---
+        // --- 2. CARACTÉRISTIQUES SOCIO-DÉMOGRAPHIQUES (TABLEAU CONSOLIDÉ) ---
         document.getElementById('socio-demo-summary').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau I : Caractéristiques socio-démographiques des infirmières</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau I : Répartition des enquêtés selon leurs caractéristiques sociodémographiques et professionnelles</h4>
             <table class="academic-table">
                 <thead>
-                    <tr><th>Variables</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr>
+                    <tr><th>Variables</th><th>Effectif (n=${total})</th><th>Fréquence (%)</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="3" class="group-header">Tranches d'âge (Moyenne : ${meanAge} ans)</td></tr>
-                    <tr><td class="row-header">Moins de 30 ans</td><td>${age_30}</td><td>${getP(age_30, total)}</td></tr>
-                    <tr><td class="row-header">30 à 45 ans</td><td>${age_30_45}</td><td>${getP(age_30_45, total)}</td></tr>
-                    <tr><td class="row-header">Plus de 45 ans</td><td>${age_45}</td><td>${getP(age_45, total)}</td></tr>
+                    <tr><td colspan="3" class="group-header">Tranche d'âge</td></tr>
+                    <tr><td class="row-header">Inférieur à 30 ans</td><td>${age_30}</td><td>${getP(age_30, total)}</td></tr>
+                    <tr><td class="row-header">Entre 30 et 45 ans</td><td>${age_30_45}</td><td>${getP(age_30_45, total)}</td></tr>
+                    <tr><td class="row-header">Supérieur à 45 ans</td><td>${age_45}</td><td>${getP(age_45, total)}</td></tr>
+
                     <tr><td colspan="3" class="group-header">Niveau d'étude</td></tr>
-                    <tr><td class="row-header">Niveau Supérieur (A1/LMD)</td><td>${a1_count}</td><td>${getP(a1_count, total)}</td></tr>
-                    <tr><td class="row-header">Niveau Technique (A2)</td><td>${a2_count}</td><td>${getP(a2_count, total)}</td></tr>
-                    <tr><td colspan="3" class="group-header">Situation Matrimoniale</td></tr>
-                    <tr><td class="row-header">Mariée</td><td>${database.filter(d=>d.etat_civil==="Mariée").length}</td><td>${getP(database.filter(d=>d.etat_civil==="Mariée").length, total)}</td></tr>
-                    <tr><td class="row-header">Célibataire</td><td>${database.filter(d=>d.etat_civil==="Célibataire").length}</td><td>${getP(database.filter(d=>d.etat_civil==="Célibataire").length, total)}</td></tr>
+                    <tr><td class="row-header">Niveau A1</td><td>${a1_count}</td><td>${getP(a1_count, total)}</td></tr>
+                    <tr><td class="row-header">Niveau A2</td><td>${a2_count}</td><td>${getP(a2_count, total)}</td></tr>
+
+                    <tr><td colspan="3" class="group-header">Ancienneté (Années)</td></tr>
+                    <tr><td class="row-header">Moins de 5 ans</td><td>${anc_junior}</td><td>${getP(anc_junior, total)}</td></tr>
+                    <tr><td class="row-header">Entre 5 et 10 ans</td><td>${anc_inter}</td><td>${getP(anc_inter, total)}</td></tr>
+                    <tr><td class="row-header">Plus de 10 ans</td><td>${anc_senior}</td><td>${getP(anc_senior, total)}</td></tr>
+
+                    <tr><td colspan="3" class="group-header">Service d'affectation</td></tr>
+                    <tr><td class="row-header">Gynécologie</td><td>${t_gyn}</td><td>${getP(t_gyn, total)}</td></tr>
+                    <tr><td class="row-header">Chirurgie</td><td>${t_chir}</td><td>${getP(t_chir, total)}</td></tr>
+                    <tr><td class="row-header">Médecine Interne</td><td>${t_med}</td><td>${getP(t_med, total)}</td></tr>
+                    <tr><td class="row-header">Autres</td><td>${t_urg}</td><td>${getP(t_urg, total)}</td></tr>
+
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
@@ -861,27 +875,12 @@
             </div>
         `;
 
-        // --- 3. RÉPARTITION PAR SERVICE ---
-        document.getElementById('socio-demo-cross-tables').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau II : Répartition du personnel selon le service d'affectation</h4>
-            <table class="academic-table">
-                <thead><tr><th>Service</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
-                <tbody>
-                    <tr><td class="row-header">Gynécologie-Obstétrique</td><td>${t_gyn}</td><td>${getP(t_gyn, total)}</td></tr>
-                    <tr><td class="row-header">Médecine Interne</td><td>${t_med}</td><td>${getP(t_med, total)}</td></tr>
-                    <tr><td class="row-header">Chirurgie</td><td>${t_chir}</td><td>${getP(t_chir, total)}</td></tr>
-                    <tr><td class="row-header">Urgences / Autre</td><td>${t_urg}</td><td>${getP(t_urg, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
-                </tbody>
-            </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> La majorité des infirmières enquêtées exercent dans les services de <b>Médecine Interne (${getP(t_med, total)}%)</b> et de <b>Gynécologie (${getP(t_gyn, total)}%)</b>. Bien que le service de Gynécologie soit le plus concerné par le dépistage, la présence importante des autres services justifie la nécessité d'une formation transversale pour ne pas manquer les opportunités de dépistage lors des consultations pour d'autres motifs.
-            </div>
-        `;
+        // --- 3. RÉPARTITION PAR SERVICE (Désactivé car inclus dans Tableau I) ---
+        document.getElementById('socio-demo-cross-tables').innerHTML = ``; 
 
         // --- 4. CONNAISSANCES (ASPECTS) ---
         document.getElementById('table-aspects-connaissances').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau III : Répartition des connaissances selon les aspects du dépistage</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau II : Répartition des connaissances selon les aspects du dépistage</h4>
             <table class="academic-table">
                 <thead>
                     <tr><th>Domaine de Connaissance</th><th>Bon (≥70%)</th><th>Moyen (50-69%)</th><th>Faible (<50%)</th></tr>
@@ -900,13 +899,13 @@
 
         // --- 5. ATTITUDE ---
         document.getElementById('table-attitude-repartition').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau IV : Répartition des infirmières selon l'attitude face au dépistage</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau III : Répartition des infirmières selon l'attitude face au dépistage</h4>
             <table class="academic-table">
                 <thead><tr><th>Niveau d'Attitude</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
                     <tr><td class="row-header">Positive (> 3.5/5)</td><td>${att_pos}</td><td>${getP(att_pos, total)}</td></tr>
                     <tr><td class="row-header">Neutre ou Négative (≤ 3.5/5)</td><td>${att_neutre}</td><td>${getP(att_neutre, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
@@ -916,13 +915,13 @@
 
         // --- 6. PRATIQUE ---
         document.getElementById('table-pratique-repartition').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau V : Distribution des infirmières selon la pratique de dépistage</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau IV : Distribution des infirmières selon la pratique de dépistage</h4>
             <table class="academic-table">
                 <thead><tr><th>Niveau de Pratique</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
                     <tr><td class="row-header">Adéquate (Score ≥ 70%)</td><td>${p_adeq}</td><td>${getP(p_adeq, total)}</td></tr>
                     <tr><td class="row-header">Insuffisante (Score < 70%)</td><td>${p_inadeq}</td><td>${getP(p_inadeq, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
@@ -930,22 +929,8 @@
             </div>
         `;
 
-        // --- 7. ANCIENNETÉ ---
-        document.getElementById('table-correlation-formation').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau VI : Répartition selon l'ancienneté professionnelle</h4>
-            <table class="academic-table">
-                <thead><tr><th>Ancienneté</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
-                <tbody>
-                    <tr><td class="row-header">Junior (Moins de 5 ans)</td><td>${anc_junior}</td><td>${getP(anc_junior, total)}</td></tr>
-                    <tr><td class="row-header">Confirmé (5 à 10 ans)</td><td>${anc_inter}</td><td>${getP(anc_inter, total)}</td></tr>
-                    <tr><td class="row-header">Senior (Plus de 10 ans)</td><td>${anc_senior}</td><td>${getP(anc_senior, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
-                </tbody>
-            </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> L'ancienneté moyenne de l'échantillon se situe majoritairement entre 5 et 10 ans (${getP(anc_inter, total)}%). L'analyse croisée (non montrée ici) suggère généralement que l'ancienneté améliore la confiance clinique, mais peut aussi renforcer des pratiques obsolètes si elle n'est pas accompagnée de formation continue. Le besoin de formation est ressenti tant par les juniors que les seniors.
-            </div>
-        `;
+        // --- 7. ANCIENNETÉ (Désactivé car inclus dans Tableau I) ---
+        document.getElementById('table-correlation-formation').innerHTML = ``;
     };
 
     window.getAvg = function(arr, p) { return arr.length ? (arr.reduce((a,c)=>a+parseFloat(c[p]),0)/arr.length).toFixed(1) : 0; };
