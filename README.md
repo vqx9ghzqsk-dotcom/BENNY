@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connaissances, attitudes et pratiques des infirmières de l'hôpital général des références de Makala sur la prévention du cancer du sein</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Note: html2pdf n'est plus nécessaire pour l'export Word, mais gardé si besoin futur -->
     <style>
         /* --- STYLE GLOBAL --- */
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; }
@@ -36,7 +36,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Sections */
-        .section-title { background: #fce4ec; color: #b03060; padding: 15px; font-weight: bold; border-left: 8px solid #b03060; margin: 30px 0 15px 0; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: space-between; }
+        .section-title { background: #fce4ec; color: #b03060; padding: 15px; font-weight: bold; border-left: 8px solid #b03060; margin: 30px 0 15px 0; text-transform: uppercase; font-size: 14px; display: flex; align-items: center; justify-content: space-between; page-break-after: avoid;}
         .sub-title { font-weight: bold; color: #b03060; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         
         .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 15px; }
@@ -51,7 +51,7 @@
         td { border: 1px solid #eee; padding: 10px; text-align: center; vertical-align: middle; }
         .td-left { text-align: left; padding-left: 15px; width: 50%; }
 
-        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 13px; background: white; }
+        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 13px; background: white; page-break-inside: avoid;}
         .academic-table thead th { border-bottom: 2px solid #000; border-top: 2px solid #000; background: #fdfdfd; text-align: center; font-weight: bold; padding: 10px; }
         .academic-table tbody td { border-bottom: 1px solid #ddd; padding: 6px; text-align: center; }
         .academic-table tbody tr:last-child td { border-bottom: 2px solid #000; }
@@ -59,7 +59,7 @@
         .academic-table .group-header { background-color: #f0f8ff; font-weight: bold; text-align: left; padding-left: 10px; color: #0d47a1; }
         .academic-table th, .academic-table td { font-size: 12px; } 
 
-        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-bottom: 15px; line-height: 1.4; font-style: italic; }
+        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-bottom: 15px; line-height: 1.4; font-style: italic; page-break-inside: avoid; }
 
         .check-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
         .check-item { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
@@ -69,14 +69,14 @@
         .btn-save:hover { background: #880e4f; transform: translateY(-2px); }
         
         /* Stats & Pie Charts */
-        .stat-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; }
+        .stat-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; page-break-inside: avoid;}
         .stat-title { font-weight: bold; color: #555; margin-bottom: 15px; font-size: 14px; border-bottom: 2px solid #b03060; display: inline-block; width: 100%; text-align: center; }
         .pie-box { display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; width: 100%; gap: 20px; }
         
         /* TABLEAU DE BORD IMAGE */
-        .dash-section { background: #fae8ee; color: #b03060; padding: 12px; font-weight: bold; margin: 25px 0 15px 0; font-size: 13px; text-transform: uppercase; border-left: 6px solid #b03060; }
+        .dash-section { background: #fae8ee; color: #b03060; padding: 12px; font-weight: bold; margin: 25px 0 15px 0; font-size: 13px; text-transform: uppercase; border-left: 6px solid #b03060; page-break-after: avoid;}
         .dash-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .dash-card { background: white; border: 1px solid #e6e6e6; border-radius: 6px; padding: 15px; flex: 1; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .dash-card { background: white; border: 1px solid #e6e6e6; border-radius: 6px; padding: 15px; flex: 1; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); page-break-inside: avoid;}
         .dash-title { border-bottom: 2px solid #880e4f; padding-bottom: 8px; margin-bottom: 15px; text-align: center; font-weight: bold; font-size: 13px; color: #444; }
         .dash-pie-box { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .dash-pie-box svg { flex-shrink: 0; }
@@ -109,9 +109,8 @@
         /* Discussion Styles */
         .discussion-section { margin-bottom: 35px; text-align: justify; }
         .discussion-section h3 { color: #2c3e50; font-size: 18px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #b03060; }
-        .discussion-section p { font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 15px; } /* Augmenté l'interligne */
+        .discussion-section p { font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 15px; }
         .highlight-quote { border-left: 5px solid #2980b9; background-color: #f4f8fa; padding: 15px; margin: 20px 0; font-style: italic; color: #2c3e50; }
-        .dynamic-discussion-content { color: #222; }
     </style>
 </head>
 <body>
@@ -369,8 +368,7 @@
     </div>
 
     <div id="content-3" class="form-content">
-        <!-- CHANGEMENT ICI : Bouton pour export WORD avec exacte fidélité -->
-        <button type="button" class="btn-excel admin-only" style="margin-bottom: 20px; width: 100%; background: #0288d1; font-size: 14px;" onclick="window.exportTab3Word()">📥 TÉLÉCHARGER L'INTÉGRALITÉ DES DONNÉES EN WORD (.DOC)</button>
+        <button type="button" class="btn-excel admin-only" style="margin-bottom: 20px; width: 100%; background: #2e7d32; font-size: 14px;" onclick="window.exportTab3Word()">📥 TÉLÉCHARGER L'INTÉGRALITÉ DES DONNÉES (FORMAT WORD)</button>
 
         <div class="section-title">TAUX DE PARTICIPATION</div>
         <div class="row" style="align-items: center;">
@@ -466,10 +464,10 @@
         <div id="table-correlation-formation"></div>
     </div>
 
-    <div id="content-4" class="form-content" style="padding: 20px; line-height: 1.7; color: #333; background-color: #fff;">
+    <div id="content-4" class="form-content" style="padding: 40px; line-height: 1.8; color: #222; background-color: #fff;">
         <button type="button" class="btn-excel admin-only" style="margin-bottom: 25px; width: 100%; background: #2980b9; font-size: 14px;" onclick="window.exportTab4()">📥 TÉLÉCHARGER LA DISCUSSION (WORD)</button>
 
-        <h2 style="color: #b03060; border-bottom: 3px solid #b03060; padding-bottom: 15px; text-transform: uppercase; text-align: center; font-size: 22px;">
+        <h2 style="color: #b03060; border-bottom: 4px solid #b03060; padding-bottom: 20px; text-transform: uppercase; text-align: center; font-size: 24px;">
             Discussion Générale et Interprétation Stratégique des Résultats
         </h2>
         
@@ -480,8 +478,6 @@
         
         <hr style="border: 0; border-top: 2px dashed #ddd; margin: 40px 0;">
     </div>
-
-<div id="dynamic-report" style="display: none;"></div>
 
 <div id="detailModal" class="modal-overlay" onclick="window.closeModal(event)">
     <div class="modal-content">
@@ -735,7 +731,6 @@
 
         document.getElementById('int-savoir').innerHTML = `Sur le plan théorique, ${((k_bon/total)*100).toFixed(1)}% des enquêtées affichent un bon niveau de connaissances. Les disparités par service suggèrent une meilleure maîtrise en Gynécologie.`;
 
-        // MODIFICATION ICI : "Autres" au lieu de "Urgences"
         let servData = [
             { l: 'Gynécologie', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scoreSavoir')) },
             { l: 'Méd. Interne', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scoreSavoir')) },
@@ -769,195 +764,19 @@
         window.updateExtraTables(total, age_30, age_30_45, age_45, a1_count, a2_count, k_bon, k_moyen, k_faible, att_pos, att_neutre, p_adeq, p_inadeq, kfr_bon, kfr_moyen, kfr_faible, ksc_bon, ksc_moyen, ksc_faible, ksa_bon, ksa_moyen, ksa_faible);
     };
 
-    // --- FONCTION EXPORT WORD STRICTEMENT IDENTIQUE ---
-    window.downloadAsDoc = function(elementId, filename) {
-        // Cloner le contenu pour le manipuler
-        var element = document.getElementById(elementId);
-        var clone = element.cloneNode(true);
-        
-        // Supprimer le bouton d'export pour qu'il n'apparaisse pas dans le Word
-        var btns = clone.querySelectorAll('.btn-excel');
-        btns.forEach(btn => btn.parentNode.removeChild(btn));
-        var btnsDelete = clone.querySelectorAll('.btn-delete-selected');
-        btnsDelete.forEach(btn => btn.parentNode.removeChild(btn));
-        
-        // Récupérer les styles du document pour que le rendu Word soit identique à l'écran
-        // On cible la balise style principale
-        var styles = document.querySelector("style").outerHTML;
-
-        // Construire le fichier HTML complet avec les namespaces Microsoft Office
-        // Cela permet à Word de comprendre qu'il doit rendre le HTML
-        var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export</title>" + styles + "</head><body>";
-        var postHtml = "</body></html>";
-        
-        var html = preHtml + clone.innerHTML + postHtml;
-
-        var blob = new Blob(['\ufeff', html], {
-            type: 'application/msword'
-        });
-        
-        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-        var downloadLink = document.createElement("a");
-        document.body.appendChild(downloadLink);
-        
-        if(navigator.msSaveOrOpenBlob ){
-            navigator.msSaveOrOpenBlob(blob, filename);
-        }else{
-            downloadLink.href = url;
-            downloadLink.download = filename;
-            downloadLink.click();
-        }
-        document.body.removeChild(downloadLink);
-    };
-
-    // Modification pour l'export Tab 3
-    window.exportTab3Word = function() {
-        showToast("Génération du fichier Word...");
-        // On appelle la nouvelle fonction qui respecte strictement l'affichage
-        window.downloadAsDoc('content-3', 'Resultats_Complets_Makala.doc');
-    };
-    
-    window.exportTab4 = function() {
-        showToast("Préparation de la discussion...");
-        window.downloadAsDoc('content-4', 'Discussion_Dynamique_Memoire.doc');
-    };
-
-    // --- FONCTION GÉNÉRATION DISCUSSION DYNAMIQUE ---
-    window.generateDiscussion = function() {
-        const total = database.length;
-        if(total === 0) return;
-
-        // --- Calculs globaux pour la discussion ---
-        const getPct = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1) : 0;
-        
-        // Age et Niveau
-        const totalAgeSum = database.reduce((acc, curr) => acc + (parseInt(curr.age_participant) || 0), 0);
-        const meanAge = (totalAgeSum / total).toFixed(1);
-        const a1_count = database.filter(d => d.niveau.includes('A1')).length;
-        const a2_count = total - a1_count;
-        const pA1 = getPct(a1_count, total);
-        const pA2 = getPct(a2_count, total);
-
-        // Connaissances
-        const k_bon = database.filter(d => d.scoreSavoir >= 70).length;
-        const k_moyen = database.filter(d => d.scoreSavoir >= 50 && d.scoreSavoir < 70).length;
-        const k_faible = database.filter(d => d.scoreSavoir < 50).length;
-        const pBonSavoir = getPct(k_bon, total);
-        
-        // Détails Connaissances
-        const kfr_bon = database.filter(d => d.k_fr >= 70).length;
-        const ksc_bon = database.filter(d => d.k_sc >= 70).length;
-        const ksa_bon = database.filter(d => d.k_sa >= 70).length;
-
-        // Pratiques
-        const p_adeq = database.filter(d => d.scorePratique >= 70).length;
-        const p_inadeq = total - p_adeq;
-        const pAdeqPrac = getPct(p_adeq, total);
-        
-        const prac_freq_syst = database.filter(d => d.prac_freq === 'syst').length;
-        const prac_main_pulpe = database.filter(d => d.prac_main === 'pulpe').length;
-        const prac_main_paume = database.filter(d => d.prac_main === 'paume').length;
-        const pErreurPaume = getPct(prac_main_paume, total);
-
-        // Obstacles
-        let obsCounts = {};
-        database.forEach(d => { if(d.obstacles) d.obstacles.forEach(o => obsCounts[o] = (obsCounts[o] || 0) + 1); });
-        let topObstacle = Object.keys(obsCounts).sort((a,b)=>obsCounts[b]-obsCounts[a])[0] || "Aucun";
-        let topObstacleVal = obsCounts[topObstacle] || 0;
-
-        // Corrélations (Scores moyens)
-        const a1_savoir_avg = window.getAvg(database.filter(d=>d.niveau.includes('A1')), 'scoreSavoir');
-        const a2_savoir_avg = window.getAvg(database.filter(d=>!d.niveau.includes('A1')), 'scoreSavoir');
-
-        const gyn_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scorePratique');
-        const med_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scorePratique');
-
-        // Corrélation 3: Attitude Positive vs Pratique
-        let att_pos_group = database.filter(d => parseFloat(d.scoreAttitude) > 3.5);
-        let att_neg_group = database.filter(d => parseFloat(d.scoreAttitude) <= 3.5);
-        
-        let prac_in_att_pos = att_pos_group.filter(d => d.scorePratique >= 70).length;
-        let prac_in_att_neg = att_neg_group.filter(d => d.scorePratique >= 70).length;
-
-        let p_pos_practice = getPct(prac_in_att_pos, att_pos_group.length);
-        let p_neg_practice = getPct(prac_in_att_neg, att_neg_group.length);
-
-
-        document.getElementById('dynamic-discussion-content').innerHTML = `
-            <h3>1. Considérations Épidémiologiques et Profil des Répondants</h3>
-            <p>
-                Notre étude menée à l'Hôpital Général de Référence de Makala a permis d'analyser les réponses de <b>${total}</b> professionnels de santé. La participation a été massive, avec un taux de réponse extrêmement élevé, témoignant d'une préoccupation manifeste du personnel soignant pour cette problématique. L'échantillon est caractérisé par un âge moyen de <b>${meanAge} ans</b>.
-            </p>
-            <p>
-                Sur le plan académique, nous notons une prédominance du personnel de niveau A1 (${a1_count} sujets, soit ${pA1}%) par rapport au niveau A2 (${pA2}%). Nos données montrent que le niveau d'instruction conditionne directement la profondeur des connaissances oncologiques : les A1 affichent un score moyen de <b>${a1_savoir_avg}%</b> contre <b>${a2_savoir_avg}%</b> pour les A2. Cette différence de <b>${(a1_savoir_avg - a2_savoir_avg).toFixed(1)} points</b> souligne l'importance de la formation théorique initiale.
-            </p>
-        </div>
-        <div class="discussion-section">
-            <h3>2. Niveau de Connaissances : Une Théorie Bien Maîtrisée mais Hétérogène</h3>
-            <p>
-                Globalement, <b>${pBonSavoir}%</b> des infirmières ont un bon niveau de connaissances. Cependant, une analyse plus fine révèle des disparités. Si les signes cliniques semblent bien connus, les aspects plus techniques comme les facteurs de risque spécifiques posent plus de difficultés. Cela suggère que le personnel sait reconnaître la maladie à un stade avancé, mais maîtrise moins les outils de prévention primaire et secondaire.
-            </p>
-            <p>
-                D'un point de vue statistique, l'écart-type observé entre les différents services prouve que la formation continue n'est pas distribuée de manière homogène. Cette sectorisation du savoir pose un problème majeur de santé publique : le dépistage du cancer du sein ne devrait pas être l'apanage exclusif des gynécologues. Une patiente se présentant aux urgences constitue une "opportunité manquée" de dépistage si l'infirmière de triage n'intègre pas l'auto-examen des seins dans son algorithme de réflexion. Ainsi, les données soulignent l'impérieuse nécessité de décloisonner l'enseignement de l'oncologie préventive pour le rendre transversal à tous les départements de l'HGRM.
-            </p>
-            <div class="highlight-quote">
-                "La connaissance sans transmission se heurte aux murs de l'hôpital. Il ne s'agit pas seulement de savoir que le cancer du sein tue, mais d'avoir l'assurance scientifique nécessaire pour l'expliquer à une patiente anxieuse."
-            </div>
-        </div>
-        <div class="discussion-section">
-            <h3>3. Attitudes et Perceptions : Entre Volonté et Freins Structurels</h3>
-            <p>
-                L'attitude globale face au dépistage est majoritairement positive. Néanmoins, l'analyse des items individuels met en lumière des freins psychologiques et culturels non négligeables.
-            </p>
-            <p>
-                En termes d'obstacles, le facteur le plus cité est le <b>"${topObstacle}"</b>, évoqué par ${topObstacleVal} répondantes. Vient ensuite la barrière de l'intimité. Il apparaît que malgré la bonne volonté, l'organisation du travail (manque de temps, cabinets non privés) et la difficulté d'aborder des sujets intimes avec des patientes âgées agissent comme de puissants freins communicationnels. À cela s'ajoute une anxiété induite par l'absence de solutions thérapeutiques accessibles. L'attitude des infirmières se trouve donc piégée dans un dilemme éthique : pourquoi dépister massivement une pathologie que le système de santé local peine à prendre en charge financièrement ? Cette donnée confirme que l'attitude clinique est intrinsèquement liée aux déterminants sociaux de la santé.
-            </p>
-        </div>
-        <div class="discussion-section">
-            <h3>4. Le Phénomène du "Know-Do Gap" : L'Écart Critique Savoir-Faire</h3>
-            <p>
-                C'est dans l'analyse croisée des connaissances et des pratiques que réside la découverte la plus préoccupante de cette étude. Alors que plus de 60% des enquêtées possèdent les bases théoriques, seules <b>${pAdeqPrac}%</b> déclarent avoir une pratique adéquate et systématique. Il existe donc un décalage massif, identifié dans la littérature scientifique anglo-saxonne sous le terme de <em>"Know-Do Gap"</em> (l'écart entre ce que l'on sait et ce que l'on fait).
-            </p>
-            <p>
-                L'exploration des obstacles rapportés par les infirmières offre une grille de lecture explicative claire de cette défaillance. Le triptyque "Manque de temps - Manque d'intimité - Manque de protocole" revient de manière récurrente comme variable explicative de la faible performance pratique. Dans un hôpital public surchargé comme l'HGRM, le ratio infirmière/patient est souvent défavorable, reléguant la prévention primaire au second plan derrière la gestion des urgences curatives.
-            </p>
-            <p>
-                Sur le plan strictement technique, l'analyse des sous-questions liées aux manœuvres de palpation révèle une mémoire procédurale défaillante. La théorie est connue, mais la gestuelle clinique n'a pas été automatisée, faute de séances de simulation pratique ou d'ateliers de recyclage.
-            </p>
-        </div>
-        <div class="discussion-section">
-            <h3>5. Recommandations et Implications Institutionnelles</h3>
-            <p>
-                Au vu de ces résultats, il apparaît évident que des interventions sporadiques de sensibilisation seront insuffisantes pour inverser la tendance. Le renforcement des capacités du personnel infirmier de l'HGR Makala nécessite une approche systémique. Nos recommandations stratégiques s'articulent autour de quatre axes majeurs :
-            </p>
-            <ul>
-                <li style="margin-bottom: 10px;"><strong>Requalification Technique Pratique :</strong> Face au taux élevé d'utilisation de la paume (${pErreurPaume}%) et à l'oubli des zones axillaires, des ateliers obligatoires de palpation sur mannequins doivent être instaurés. La théorie ne suffit pas ; la mémoire gestuelle doit être entraînée.</li>
-                <li style="margin-bottom: 10px;"><strong>Aménagement de la Confidentialité :</strong> L'obstacle majeur identifié ("${topObstacle}") ne pourra être levé que par une réorganisation des espaces de consultation. L'installation de paravents rigides ou de boxes dédiés est une condition sine qua non pour que l'infirmière se sente légitime et à l'aise pour pratiquer l'examen clinique.</li>
-                <li style="margin-bottom: 10px;"><strong>Décloisonnement de l'Oncologie :</strong> Le score de savoir significativement plus bas des services non gynécologiques impose une politique de formation continue transversale. Tout infirmier, quel que soit son service, doit être capable de proposer un dépistage.</li>
-            </ul>
-            <p>
-                En conclusion, l'infirmière congolaise possède un potentiel immense et inexploité en tant qu'actrice de première ligne dans la lutte contre le cancer du sein. Transformer ce potentiel en impact réel exigera de la part des décideurs sanitaires une volonté politique forte, traduite par des investissements ciblés dans l'ergonomie de travail et le développement des compétences pratiques continues.
-            </p>
-        </div>
-    `;
-
     // --- FONCTION MISE À JOUR DES TABLEAUX DÉTAILLÉS ---
     window.updateExtraTables = function(total, age_30, age_30_45, age_45, a1_count, a2_count, k_bon, k_moyen, k_faible, att_pos, att_neutre, p_adeq, p_inadeq, kfr_bon, kfr_moyen, kfr_faible, ksc_bon, ksc_moyen, ksc_faible, ksa_bon, ksa_moyen, ksa_faible) {
         if(total === 0) return;
 
-        // --- Calculs Supplémentaires ---
-        const getP = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1).replace('.', ',') : "0,0"; // Format académique avec virgule
+        const getP = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1).replace('.', ',') : "0,0";
         
-        // Moyenne d'âge
         const totalAgeSum = database.reduce((acc, curr) => acc + (parseInt(curr.age_participant) || 0), 0);
         const meanAge = (totalAgeSum / total).toFixed(1).replace('.', ',');
 
-        // Ancienneté groupée
         let anc_junior = database.filter(d => d.anciennete < 5).length;
-        let anc_inter = database.filter(d => d.anciennete >=5 && d.anciennete <= 10).length;
+        let anc_inter = database.filter(d => d.anciennete >= 5 && d.anciennete <= 10).length;
         let anc_senior = database.filter(d => d.anciennete > 10).length;
 
-        // Répartition par Service
         let t_gyn = database.filter(d => d.service.includes('Gynéco')).length;
         let t_med = database.filter(d => d.service.includes('Interne')).length;
         let t_chir = database.filter(d => d.service.includes('Chirurgie')).length;
@@ -1025,13 +844,10 @@
                 <tbody>
                     <tr><td class="row-header">Savoir Global (Score total)</td><td>${k_bon} (${getP(k_bon, total)}%)</td><td>${k_moyen} (${getP(k_moyen, total)}%)</td><td>${k_faible} (${getP(k_faible, total)}%)</td></tr>
                     <tr><td class="row-header">Facteurs de Risque (K-FR)</td><td>${kfr_bon} (${getP(kfr_bon, total)}%)</td><td>${kfr_moyen} (${getP(kfr_moyen, total)}%)</td><td>${kfr_faible} (${getP(kfr_faible, total)}%)</td></tr>
-                    <tr><td class="row-header">Signes Cliniques (K-SC)</td><td>${ksc_bon} (${getP(ksc_bon, total)}%)</td><td>${ksc_moyen} ( ${getP(ksc_moyen, total)}%)</td><td>${ksc_faible} (${getP(ksc_faible, total)}%)</td></tr>
+                    <tr><td class="row-header">Signes Cliniques (K-SC)</td><td>${ksc_bon} (${getP(ksc_bon, total)}%)</td><td>${ksc_moyen} (${getP(ksc_moyen, total)}%)</td><td>${ksc_faible} (${getP(ksc_faible, total)}%)</td></tr>
                     <tr><td class="row-header">Méthodes de Dépistage (K-SA)</td><td>${ksa_bon} (${getP(ksa_bon, total)}%)</td><td>${ksa_moyen} (${getP(ksa_moyen, total)}%)</td><td>${ksa_faible} (${getP(ksa_faible, total)}%)</td></tr>
                 </tbody>
             </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> Globalement, <b>${getP(k_bon, total)}%</b> des infirmières ont un bon niveau de connaissances. On observe que les signes cliniques sont mieux connus (${getP(ksc_bon, total)}% de bons scores) que les facteurs de risque spécifiques ou les recommandations précises de dépistage (mammographie). Cela suggère que le personnel sait reconnaître la maladie à un stade avancé, mais maîtrise moins les outils de prévention primaire et secondaire.
-            </div>
         `;
 
         // --- 5. ATTITUDES (DÉTAILLÉES) ---
@@ -1041,7 +857,7 @@
         for(let qIndex=0; qIndex<5; qIndex++) {
             let high = 0; let low = 0; let neu = 0;
             database.forEach(d => {
-                let val = d.att_details[qIndex]; // réponse 1 à 5
+                let val = d.att_details[qIndex]; 
                 if(val >= 4) high++;
                 else if(val === 3) neu++;
                 else low++;
@@ -1064,9 +880,6 @@
                     ${attTableRows}
                 </tbody>
             </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> L'analyse détaillée montre que si le rôle éducatif est bien accepté, la question de l'intimité avec les patientes âgées pose problème (plus de réponses neutres/négatives). La peur du diagnostic est également un frein notable.
-            </div>
         `;
 
         // --- 6. PRATIQUE (DÉTAILLÉE) ---
@@ -1108,18 +921,16 @@
                     <tr><td>Mamelon uniquement</td><td>${p_zone_mamelon}</td><td>${getP(p_zone_mamelon, total)}</td></tr>
                 </tbody>
             </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> La pratique systématique chez les patientes est faible (${getP(p_freq_syst, total)}%). Un pourcentage inquiétant utilise la paume entière (${pErreurPaume}%) au lieu de la pulpe, ce qui réduit la sensibilité de palpation.
-            </div>
         `;
 
         // --- 7. CORRÉLATIONS ---
         let a1_savoir_avg = window.getAvg(database.filter(d=>d.niveau.includes('A1')), 'scoreSavoir');
         let a2_savoir_avg = window.getAvg(database.filter(d=>!d.niveau.includes('A1')), 'scoreSavoir');
+
         let gyn_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scorePratique');
         let med_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scorePratique');
         let other_prac_avg = window.getAvg(database.filter(d=>d.service==='Autres'), 'scorePratique');
-
+        
         let att_pos_group = database.filter(d => parseFloat(d.scoreAttitude) > 3.5);
         let att_neg_group = database.filter(d => parseFloat(d.scoreAttitude) <= 3.5);
         
@@ -1129,7 +940,6 @@
         let p_pos_practice = getP(prac_in_att_pos, att_pos_group.length);
         let p_neg_practice = getP(prac_in_att_neg, att_neg_group.length);
 
-
         document.getElementById('table-correlation-formation').innerHTML = `
             <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau V : Analyse des corrélations entre variables</h4>
             <table class="academic-table">
@@ -1137,41 +947,38 @@
                     <tr><th>Corrélations</th><th>Groupe 1</th><th>Groupe 2</th><th>Observation</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="row-header">Niveau d'étude vs Score de Savoir</td>
+                    <tr>
+                        <td class="row-header">Niveau d'étude vs Score de Savoir</td>
                         <td>Niveau A1<br><b>Moy: ${a1_savoir_avg}%</b></td>
                         <td>Niveau A2<br><b>Moy: ${a2_savoir_avg}%</b></td>
                         <td>${parseFloat(a1_savoir_avg) > parseFloat(a2_savoir_avg) ? 'A1 a un meilleur score théorique.' : 'Différence non significative.'}</td>
                     </tr>
-                    <tr><td class="row-header">Service d'affectation vs Score de Pratique</td>
+                    <tr>
+                        <td class="row-header">Service d'affectation vs Score de Pratique</td>
                         <td>Gynécologie<br><b>Moy: ${gyn_prac_avg}%</b></td>
-                        <td>Autres (Med/Chir)<br><b>Moy: ~${Math.round((parseFloat(med_prac_avg)+parseFloat(other_prac_avg))/2)}%</b></td>
+                        <td>Méd. Interne / Chir.<br><b>Moy: ~${Math.round((parseFloat(med_prac_avg)+parseFloat(chir_prac_avg))/2)}%</b></td>
                         <td>Meilleure pratique en Gynécologie.</td>
                     </tr>
-                    <tr><td class="row-header">Attitude vs Qualité de la Pratique</td>
+                    <tr>
+                        <td class="row-header">Attitude vs Qualité de la Pratique</td>
                         <td>Attitude Positive<br><b>Pratique adéquate: ${p_pos_practice}%</b></td>
                         <td>Attitude Neutre/Nég.<br><b>Pratique adéquate: ${p_neg_practice}%</b></td>
                         <td>${parseFloat(p_pos_practice) > parseFloat(p_neg_practice) ? 'Une attitude positive favorise une bonne pratique.' : 'Faible impact de l\'attitude sur la pratique.'}</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> Le niveau d'étude influence fortement les connaissances. Cependant, l'attitude positive ne garantit pas systématiquement une pratique excellente, suggérant que d'autres barrières (temps, matériel) pèsent plus lourdement que la volonté personnelle.
-            </div>
         `;
     };
 
     window.getAvg = function(arr, p) { return arr.length ? (arr.reduce((a,c)=>a+parseFloat(c[p]),0)/arr.length).toFixed(1) : 0; };
     
-    // Ajout des fonctions pour la modale (Voir Fiche)
+    // Ajout des fonctions pour la modale
     window.viewDetails = function(index) {
         const record = database[index];
         if(!record) return;
 
         document.getElementById('modal-title-id').innerText = record.id;
-        
-        let content = `
-            <table class="academic-table" style="text-align: left;">
-                <tbody><tr><td colspan="2" class="group-header">1. Profil Démographique & Professionnel</td></tr><tr><th style="width: 40%; background: #f9f9f9;">Âge</th><td>${record.age_participant} ans</td></tr><tr><th style="background: #f9f9f9;">Sexe</th><td>${record.sexe}</td></tr><tr><th style="background: #f9f9f9;">État civil</th><td>${record.etat_civil}</td></tr><tr><th style="background: #f9f9f9;">Niveau d'étude</th><td>${record.niveau}</td></tr><tr><th style="background: #f9f9f9;">Service d'affectation</th><td>${record.service}</td></tr><tr><th style="background: #f9f9f9;">Ancienneté</th><td>${record.anciennete} an(s)</td></tr><tr><td colspan="2" class="group-header">2. Scores Évalués</td></tr><tr><th style="background: #f9f9f9;">Score Savoir (Connaissances)</th><td style="color:${record.scoreSavoir >= 70 ? 'green' : 'red'}; font-weight:bold;">${record.scoreSavoir}%</td></tr><tr><th style="background: #f9f9f9;">Score Pratique (Savoir-faire)</th><td style="color:${record.scorePratique >= 70 ? 'green' : 'red'}; font-weight:bold;">${record.scorePratique}%</td></tr><tr><th style="background: #f9f9f9;">Score Attitude (Perception)</th><td>${record.scoreAttitude} / 5.0</td></tr><tr><td colspan="2" class="group-header">3. Données Qualitatives</td></tr><tr><th style="background: #f9f9f9;">Besoin de formation exprimé ?</th><td>${record.besoin_formation}</td></tr></tbody></table>`;
+        let content = `<table class="academic-table" style="text-align: left;"><tbody><tr><td colspan="2" class="group-header">1. Profil Démographique & Professionnel</td></tr><tr><th style="width: 40%; background: #f9f9f9;">Âge</th><td>${record.age_participant} ans</td></tr><tr><th style="background: #f9f9f9;">Sexe</th><td>${record.sexe}</td></tr><tr><th style="background: #f9f9f9;">État civil</th><td>${record.etat_civil}</td></tr><tr><th style="background: #f9f9f9;">Niveau d'étude</th><td>${record.niveau}</td></tr><tr><th style="background: # inline-block;">Service d'affectation</th><td>${record.service}</td></tr><tr><th style="background: #f9f9f9;">Ancienneté</th><td>${record.anciennete} an(s)</td></tr><tr><td colspan="2" class="group-header">2. Scores Évalués</td></tr><tr><th style="background: #f9f9f9;">Score Savoir (Connaissances)</th><td style="color:${record.scoreSavoir >= 70 ? 'green' : 'red'}; font-weight:bold;">${record.scoreSavoir}%</td></tr><tr><th style="background: #f9f9f9;">Score Pratique (Savoir-faire)</th><td style="color:${record.scorePratique >= 70 ? 'green' : 'red'}; font-weight:bold;">${record.scorePratique}%</td></tr><tr><th style="background: #f9f9f9;">Score Attitude (Perception)</th><td>${record.scoreAttitude} / 5.0</td></tr><tr><td colspan="2" class="group-header">3. Données Qualitatives</td></tr><tr><th style="background: #f9f9f9;">Besoin de formation exprimé ?</th><td>${record.besoin_formation}</td></tr></tbody></table>`;
         
         if (record.obstacles && record.obstacles.length > 0) {
             content += `<tr><th style="background: #f9f9f9;">Obstacles rencontrés</th><td>${record.obstacles.join(', ')}</td></tr>`;
@@ -1179,30 +986,73 @@
         if (record.reco_verbatim) {
             content += `<tr><th style="background: #f9f9f9;">Verbatim / Recommandation</th><td><em>"${record.reco_verbatim}"</em></td></tr>`;
         }
-        
         document.getElementById('modal-body-content').innerHTML = content;
         document.getElementById('detailModal').style.display = 'flex';
     };
 
     window.closeModalBtn = function() { document.getElementById('detailModal').style.display = 'none'; };
-    window.closeModal = function(event) { if(event.target.id === 'detailModal') { document.getElementById('detailModal').style.display = 'none'; } };
+    window.closeModal = function(event) { if(event.target.id === 'detailModal') document.getElementById('detailModal').style.display = 'none'; };
 
-    // Ajout de la fonction pour supprimer une fiche individuelle
-    window.deleteSingle = function(index) {
-        if(confirm("Êtes-vous sûr de vouloir supprimer définitivement la fiche " + database[index].id + " ?")) {
-            database.splice(index, 1);
-            window.updateUI();
-            showToast("Fiche supprimée avec succès !");
+    // --- FONCTION EXPORT WORD COMPLET (ONGLET 3) ---
+    window.exportTab3Word = function() {
+        showToast("Génération du document Word, veuillez patienter...");
+        
+        const element = document.getElementById('content-3');
+        
+        // On cache le bouton pour qu'il n'apparaisse pas dans le fichier
+        const btnExcel = element.querySelector('.btn-excel');
+        if (btnExcel) btnExcel.style.display = 'none';
+
+        // 1. Clone complet de l'onglet pour ne rien perdre
+        var clone = element.cloneNode(true);
+
+        // 2. Nettoyage (supprime le bouton d'export)
+        var btns = clone.querySelectorAll('.btn-excel');
+        btns.forEach(btn => btn.parentNode.removeChild(btn));
+
+        // 3. Préparation du HTML pour Word
+        // On inclut des styles spécifiques pour Word pour éviter que tout ne soit noir et blanc
+        var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export</title>";
+        var styleContent = `
+            table, td, th { border: 1px solid #000; border-collapse: collapse; padding: 8px; font-family: 'Times New Roman', serif; font-size: 12px; vertical-align: center; }
+            .academic-table { border: 1px solid black; margin-bottom: 20px; width: 100%; }
+            .academic-table th { background-color: #f2f2f2; font-weight: bold; border-bottom: 1px solid black; border-top: 1px solid black; }
+            .academic-table .row-header { text-align: left; padding-left: 10px; font-weight: normal; }
+            .academic-table .group-header { background-color: #f0f8ff; text-align: left; padding-left: 10px; color: #0d47a1; }
+            .interpretation-text { background-color: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 15px; font-style: italic; }
+            .section-title, .dash-section, .dash-title { page-break-after: avoid; }
+            .stat-title { border-bottom: 2px solid #b03060; }
+        `;
+        var postHtml = "</style></head><body>";
+
+        // Fusionne le tout : En-tête (Style + Clone Contenu) + Fermeture
+        var html = preHtml + styleContent + clone.innerHTML + postHtml;
+
+        // 4. Création du Blob Word
+        var blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+        var downloadLink = document.createElement("a");
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob) {
+            navigator.msSaveOrOpenBlob(blob, 'Resultats_Onglet_3_Complet.doc');
+        } else {
+            downloadLink.href = url;
+            downloadLink.download = 'Resultats_Onglet_3_Complet.doc';
+            downloadLink.click();
         }
+        document.body.removeChild(downloadLink);
+
+        // 5. Restauration du bouton
+        if (btnExcel) btnExcel.style.display = 'block';
+        showToast("Document Word téléchargé avec succès !");
     };
 
     window.updateUI = function() {
         document.getElementById('count-badge').textContent = database.length;
         document.getElementById('n-total').textContent = database.length;
         const tbody = document.getElementById('database-body');
-        
         let deleteBtnClass = isAdmin ? "btn-delete-single admin-visible" : "btn-delete-single admin-only";
-
         tbody.innerHTML = database.map((row, index) => `
             <tr>
                 <td class="admin-only ${isAdmin ? 'admin-visible' : ''}"><input type="checkbox" class="row-check"></td>
@@ -1231,12 +1081,143 @@
         }
     };
 
-    function showToast(m) { var x = document.getElementById("toast"); x.className="show"; x.innerText=m; setTimeout(()=>x.className=x.className.replace("show",""),3000); }
+    // --- FONCTION GÉNÉRATION DISCUSSION DYNAMIQUE ---
+    window.generateDiscussion = function() {
+        const total = database.length;
+        if(total === 0) return;
+
+        // --- Calculs globaux pour la discussion ---
+        const getPct = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1) : 0;
+        
+        // Age et Niveau
+        const totalAgeSum = database.reduce((acc, curr) => acc + (parseInt(curr.age_participant) || 0), 0);
+        const meanAge = (totalAgeSum / total).toFixed(1);
+        const a1_count = database.filter(d => d.niveau.includes('A1')).length;
+        const a2_count = total - a1_count;
+        const pA1 = getPct(a1_count, total);
+        const pA2 = getPct(a2_count, total);
+
+        // Connaissances
+        const k_bon = database.filter(d => d.scoreSavoir >= 70).length;
+        const k_moyen = database.filter(d => d.scoreSavoir >= 50 && d.scoreSavoir < 70).length;
+        const k_faible = database.filter(d => d.scoreSavoir < 50).length;
+        const pBonSavoir = getPct(k_bon, total);
+        
+        // Détails Connaissances
+        const kfr_bon = database.filter(d => d.k_fr >= 70).length;
+        const ksc_bon = database.filter(d => d.k_sc >= 70).length;
+        const ksa_bon = database.filter(d => d.k_sa >= 70).length;
+
+        // Pratiques
+        const p_adeq = database.filter(d => d.scorePratique >= 70).length;
+        const p_inadeq = total - p_adeq;
+        const pAdeqPrac = getPct(p_adeq, total);
+        
+        const prac_freq_syst = database.filter(d => d.prac_freq === 'syst').length;
+        const prac_main_pulpe = database.filter(d => d.prac_main === 'pulpe').length;
+        const prac_main_paume = database.filter(d => d.prac_main === 'paume').length;
+        const pErreurPaume = getPct(prac_main_paume, total);
+
+        // Obstacles
+        let obsCounts = {};
+        database.forEach(d => { if(d.obstacles) d.obstacles.forEach(o => obsCounts[o] = (obsCounts[o] || 0) + 1); });
+        let topObstacle = Object.keys(obsCounts).sort((a,b)=>obsCounts[b]-obsCounts[a])[0] || "Aucun";
+        let topObstacleVal = obsCounts[topObstacle] || 0;
+
+        // Corrélations (Scores moyens)
+        const a1_savoir_avg = parseFloat(window.getAvg(database.filter(d=>d.niveau.includes('A1')), 'scoreSavoir'));
+        const a2_savoir_avg = parseFloat(window.getAvg(database.filter(d=>!d.niveau.includes('A1')), 'scoreSavoir'));
+        const gyn_prac_avg = parseFloat(window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scorePratique'));
+        const med_prac_avg = parseFloat(window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scorePratique'));
+
+        // --- Construction du Texte ---
+        let html = '';
+
+        html += `
+        <div class="discussion-section">
+            <h3>1. Considérations Épidémiologiques et Profil des Répondants</h3>
+            <p>
+                Notre étude menée à l'Hôpital Général de Référence de Makala a permis d'analyser les réponses de <b>${total}</b> professionnels de santé. La participation a été massive, avec un taux de réponse extrêmement élevé, témoignant de la préoccupation du personnel face au problème de santé publique que représente le cancer du sein.
+            </p>
+            <p>
+                L'échantillon est caractérisé par un âge moyen de <b>${meanAge} ans</b>. Cette population active professionnellement est essentielle pour évaluer les pratiques actuelles. Sur le plan académique, nous notons une prédominance du personnel de niveau A1 (${a1_count} sujets, soit ${pA1}%) par rapport au niveau A2. Cette structure est cruciale car nos données montrent que le niveau d'étude influence directement le niveau de connaissances : les A1 affichent un score moyen de <b>${a1_savoir_avg}%</b> contre <b>${a2_savoir_avg}%</b> pour les A2. Cette différence de <b>${(a1_savoir_avg - a2_savoir_avg).toFixed(1)} points</b> souligne l'importance de la formation théorique initiale.
+            </p>
+        </div>
+        `;
+
+        html += `
+        <div class="discussion-section">
+            <h3>2. Niveau de Connaissances : Une Théorie Bien Maîtrisée mais Hétérogène</h3>
+            <p>
+                Globalement, <b>${pBonSavoir}%</b> des infirmières possèdent un bon niveau de connaissances (score ≥ 70%). Cependant, une analyse plus fine révèle des disparités selon les domaines étudiés. Si les signes cliniques (comme le nodule dur ou la rétraction du mamelon) semblent bien connus (${getPct(ksc_bon, total)}% de bonnes réponses), les aspects plus techniques comme les facteurs de risque spécifiques ou les méthodes modernes de dépistage posent plus de difficultés.
+            </p>
+            <p>
+                De plus, l'analyse par service met en évidence une concentration du savoir dans les services spécialisés (Gynécologie), alors que les services de médecine interne ou d'urgence affichent des scores légèrement inférieurs. Cela suggère que les connaissances en oncologie sont encore trop cloisonnées et ne sont pas transversales à l'hôpital, risquant de créer des "opportunités manquées" de dépistage lors de consultations pour d'autres pathologies.
+            </p>
+        </div>
+        `;
+
+        html += `
+        <div class="discussion-section">
+            <h3>3. Attitudes et Perceptions : Entre Volonté et Freins Structurels</h3>
+            <p>
+                L'attitude globale face au dépistage est majoritairement positive, ce qui est un point fort de notre cohorte. Les infirmières reconnaissent le rôle préventif qu'elles doivent jouer. Toutefois, l'analyse des items individuels met en lumière des freins psychologiques et culturels non négligeables.
+            </p>
+            <p>
+                En termes d'obstacles, le facteur le plus cité est le <b>"${topObstacle}"</b>, évoqué par ${topObstacleVal} répondantes. Vient ensuite la barrière de l'intimité. Il apparaît que malgré la bonne volonté, l'organisation du travail (manque de temps, cabinets non privés) et la difficulté à aborder des sujets intimes avec des patientes âgées ou issues de communautés traditionnelles pèsent lourdement sur la décision de procéder à un examen clinique des seins.
+            </p>
+            <div class="highlight-quote">
+                "L'attitude déclarée favorable des infirmières se heurte souvent à la réalité du terrain, où le manque d'intimité transforme un acte de soin préventif en une source d'embarras ou d'inconfort."
+            </div>
+        </div>
+        `;
+
+        html += `
+        <div class="discussion-section">
+            <h3>4. Le Phénomène du "Know-Do Gap" : L'Écart Critique Savoir-Faire</h3>
+            <p>
+                C'est sans doute le résultat le plus marquant de cette étude. Alors que <b>${pBonSavoir}%</b> des infirmières ont de bonnes connaissances théoriques, seules <b>${pAdeqPrac}%</b> déclarent avoir une pratique adéquate et régulière. Il existe donc un décalage massif entre ce qui est su et ce qui est fait en réalité.
+            </p>
+            <p>
+                Sur le plan technique, nos résultats sont préoccupants. Seulement <b>${getP(prac_freq_syst, total)}%</b> des infirmières pratiquent l'examen des seins de manière systématique. Pire encore, <b>${pErreurPaume}%</b> des répondantes déclarent utiliser la paume entière de la main pour palper au lieu de la pulpe, ce qui est techniquement incorrect et réduit drastiquement la sensibilité de l'examen. De plus, seule une minorité vérifie systématiquement le creux axillaire, zone pourtant critique pour le staging ganglionnaire.
+            </p>
+            <p>
+                Ce déficit de pratique est particulièrement marqué en dehors de la gynécologie. Le score de pratique moyen à la gynécologie est de <b>${gyn_prac_avg}%</b>, contre <b>${med_prac_avg}%</b> en médecine interne. Cette variation confirme que la compétence technique est liée au contexte de pratique quotidien et non à la seule formation initiale.
+            </p>
+        </div>
+        `;
+
+        html += `
+        <div class="discussion-section">
+            <h3>5. Recommandations et Implications Institutionnelles</h3>
+            <p>
+                Au vu de ces résultats, il ne suffit pas de dire aux infirmières qu'elles "doivent" faire mieux. Il faut lever les barrières objectives qui empêchent la traduction des connaissances en actes. Nos recommandations stratégiques s'articulent autour de trois axes prioritaires :
+            </p>
+            <ul>
+                <li><strong>Requalification Technique Pratique :</strong> Face au taux élevé d'utilisation de la paume (${pErreurPaume}%) et à l'oubli des zones axillaires, des ateliers obligatoires de palpation sur mannequins doivent être instaurés. La théorie ne suffit pas ; la mémoire gestuelle doit être entraînée.</li>
+                <li><strong>Aménagement de la Confidentialité :</strong> L'obstacle majeur identifié ("${topObstacle}") ne pourra être levé que par une réorganisation des espaces de consultation. L'installation de paravents rigides ou de boxes dédiés est une condition sine qua non pour que l'infirmière se sente légitime et à l'aise pour pratiquer l'examen clinique.</li>
+                <li><strong>Décloisonnement de l'Oncologie :</strong> Le score de savoir significativement plus bas des services non gynécologiques impose une politique de formation continue transversale. Tout infirmier, quel que soit son service, doit être capable de proposer un dépistage.</li>
+            </ul>
+            <p>
+                En conclusion, notre étude démontre que les infirmières de l'HGR Makala ont le <b>potentiel cognitif</b> nécessaire pour lutter contre le cancer du sein, mais que le <b>potentiel opérationnel</b> est entravé par des contraintes logistiques et un déficit de formation pratique. Combler ce "Know-Do Gap" est la clé pour améliorer le pronostic des patientes prises en charge.
+            </p>
+        </div>
+        `;
+
+        document.getElementById('dynamic-discussion-content').innerHTML = html;
+    };
+
+    window.exportTab4 = function() {
+        showToast("Préparation de la discussion...");
+        window.downloadAsDoc('content-4', 'Discussion_Dynamique_Memoire.doc');
+    };
 
     window.exportToCSV = function() {
         if(database.length === 0) return;
         let csv = "ID;Service;Niveau;Anciennete;ScoreSavoir;ScorePratique;ScoreAttitude\n";
-        database.forEach(r => { csv += `${r.id};${r.service};${r.niveau};${r.anciennete};${r.scoreSavoir};${r.scorePratique};${r.scoreAttitude}\n`; });
+        database.forEach(r => {
+            csv += `${r.id};${r.service};${r.niveau};${r.anciennete};${r.scoreSavoir};${r.scorePratique};${r.scoreAttitude}\n`;
+        });
         let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         let url = URL.createObjectURL(blob);
         let link = document.createElement("a");
