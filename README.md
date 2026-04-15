@@ -735,19 +735,6 @@
 
         document.getElementById('int-taux').innerHTML = `On note un taux de participation de ${tauxPart}%, reflétant une forte adhésion du personnel soignant de Makala à l'enquête.`;
 
-        document.getElementById('taux-participation-container').innerHTML = `
-            <table class="academic-table" style="margin-bottom:20px;">
-                <thead>
-                    <tr><th>Statut d'enrôlement</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td class="row-header">Ont accepté de participer</td><td>${consentis}</td><td>${tauxPart}</td></tr>
-                    <tr><td class="row-header">Ont refusé / Exclus</td><td>${refus}</td><td>${(100 - tauxPart).toFixed(1)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total sollicité</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
-                </tbody>
-            </table>
-        `;
-
         let age_30 = database.filter(d => d.age_participant < 30).length;
         let age_30_45 = database.filter(d => d.age_participant >= 30 && d.age_participant <= 45).length;
         let age_45 = database.filter(d => d.age_participant > 45).length;
@@ -806,171 +793,158 @@
         window.updateExtraTables(total, age_30, age_30_45, age_45, a1_count, a2_count, k_bon, k_moyen, k_faible, att_pos, att_neutre, p_adeq, p_inadeq, kfr_bon, kfr_moyen, kfr_faible, ksc_bon, ksc_moyen, ksc_faible, ksa_bon, ksa_moyen, ksa_faible);
     };
 
+    // --- FONCTION MISE À JOUR DES TABLEAUX DÉTAILLÉS (NOUVELLE VERSION) ---
     window.updateExtraTables = function(total, age_30, age_30_45, age_45, a1_count, a2_count, k_bon, k_moyen, k_faible, att_pos, att_neutre, p_adeq, p_inadeq, kfr_bon, kfr_moyen, kfr_faible, ksc_bon, ksc_moyen, ksc_faible, ksa_bon, ksa_moyen, ksa_faible) {
         if(total === 0) return;
 
-        let t_gyn = database.filter(d => d.service.includes('Gynéco')).length;
+        // --- Calculs Supplémentaires ---
         const getP = (val, tot) => tot > 0 ? ((val / tot) * 100).toFixed(1) : 0;
+        
+        // Moyenne d'âge
+        const totalAgeSum = database.reduce((acc, curr) => acc + (parseInt(curr.age_participant) || 0), 0);
+        const meanAge = (totalAgeSum / total).toFixed(1);
 
-        document.getElementById('socio-demo-cross-tables').innerHTML = `
-            <h4 style="color:#444; font-size:13px;">Tableau croisé : Âge et Niveau d'étude</h4>
+        // Ancienneté groupée
+        let anc_junior = database.filter(d => d.anciennete < 5).length;
+        let anc_inter = database.filter(d => d.anciennete >= 5 && d.anciennete <= 10).length;
+        let anc_senior = database.filter(d => d.anciennete > 10).length;
+
+        // Répartition par Service
+        let t_gyn = database.filter(d => d.service.includes('Gynéco')).length;
+        let t_med = database.filter(d => d.service.includes('Interne')).length;
+        let t_chir = database.filter(d => d.service.includes('Chirurgie')).length;
+        let t_urg = database.filter(d => d.service.includes('Urgences')).length;
+
+        // --- 1. TAUX DE PARTICIPATION ---
+        let accepted = database.filter(d => d.consentement === 'oui').length;
+        let refused = total - accepted;
+
+        document.getElementById('taux-participation-container').innerHTML = `
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau 0 : Taux de participation au sein de l'HGR Makala</h4>
             <table class="academic-table">
                 <thead>
-                    <tr>
-                        <th rowspan="2">Tranche d'âge</th>
-                        <th colspan="2">Niveau Supérieur (A1)</th>
-                        <th colspan="2">Niveau Technique (A2)</th>
-                        <th colspan="2">Total (100%)</th>
-                    </tr>
-                    <tr>
-                        <th>n</th><th>%</th><th>n</th><th>%</th><th>n</th><th>%</th>
-                    </tr>
+                    <tr><th>Statut</th><th>Effectif (n)</th><th>Pourcentage (%)</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="row-header">< 30 ans</td>
-                        <td>${database.filter(d=>d.age_participant<30 && d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant<30 && d.niveau.includes('A1')).length, age_30)}</td>
-                        <td>${database.filter(d=>d.age_participant<30 && !d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant<30 && !d.niveau.includes('A1')).length, age_30)}</td>
-                        <td>${age_30}</td><td>100.0</td>
-                    </tr>
-                    <tr>
-                        <td class="row-header">30-45 ans</td>
-                        <td>${database.filter(d=>d.age_participant>=30 && d.age_participant<=45 && d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant>=30 && d.age_participant<=45 && d.niveau.includes('A1')).length, age_30_45)}</td>
-                        <td>${database.filter(d=>d.age_participant>=30 && d.age_participant<=45 && !d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant>=30 && d.age_participant<=45 && !d.niveau.includes('A1')).length, age_30_45)}</td>
-                        <td>${age_30_45}</td><td>100.0</td>
-                    </tr>
-                    <tr>
-                        <td class="row-header">> 45 ans</td>
-                        <td>${database.filter(d=>d.age_participant>45 && d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant>45 && d.niveau.includes('A1')).length, age_45)}</td>
-                        <td>${database.filter(d=>d.age_participant>45 && !d.niveau.includes('A1')).length}</td><td>${getP(database.filter(d=>d.age_participant>45 && !d.niveau.includes('A1')).length, age_45)}</td>
-                        <td>${age_45}</td><td>100.0</td>
-                    </tr>
+                    <tr><td class="row-header">Accepté (Inclus dans l'étude)</td><td>${accepted}</td><td>${getP(accepted, total)}</td></tr>
+                    <tr><td class="row-header">Refusé / Exclus</td><td>${refused}</td><td>${getP(refused, total)}</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total Sollicité</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
                 </tbody>
             </table>
-        `;
-
-        document.getElementById('socio-demo-summary').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau I : Répartition des participants selon les caractéristiques socio-démographiques</h4>
-            <div class="interpretation-text" style="margin-bottom:15px;">
-                Dans le cadre de l’amélioration de la qualité de présentation et de l’interprétation des données, certaines réorganisations ont été apportées aux tableaux des caractéristiques socio-démographiques. En ce qui concerne la variable relative aux tranches d’âge, une répartition plus équilibrée a été retenue, permettant une meilleure représentativité des différentes catégories. Cette structuration met en évidence la prédominance des sujets appartenant à la tranche d’âge active (30 à 45 ans).
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> Sur un total de ${total} professionnels de santé sollicités, ${accepted} ont accepté de participer, soit un taux de participation de <b>${getP(accepted, total)}%</b>. Ce taux élevé témoigne d'un vif intérêt du personnel infirmier pour la thématique du cancer du sein et garantit une bonne représentativité des résultats.
             </div>
+        `;
+
+        // --- 2. CARACTÉRISTIQUES SOCIO-DÉMOGRAPHIQUES ---
+        document.getElementById('socio-demo-summary').innerHTML = `
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau I : Caractéristiques socio-démographiques des infirmières</h4>
             <table class="academic-table">
-                <thead><tr><th style="width:50%;">Variables</th><th>Effectifs (n=${total})</th><th>Pourcentage (%)</th></tr></thead>
+                <thead>
+                    <tr><th>Variables</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr>
+                </thead>
                 <tbody>
-                    <tr><td colspan="3" class="group-header">Tranches d'âge</td></tr>
-                    <tr><td class="row-header">Moins de 30 ans</td><td>${age_30}</td><td>${((age_30/total)*100).toFixed(1)}</td></tr>
-                    <tr><td class="row-header">De 30 à 45 ans</td><td>${age_30_45}</td><td>${((age_30_45/total)*100).toFixed(1)}</td></tr>
-                    <tr><td class="row-header">Plus de 45 ans</td><td>${age_45}</td><td>${((age_45/total)*100).toFixed(1)}</td></tr>
+                    <tr><td colspan="3" class="group-header">Tranches d'âge (Moyenne : ${meanAge} ans)</td></tr>
+                    <tr><td class="row-header">Moins de 30 ans</td><td>${age_30}</td><td>${getP(age_30, total)}</td></tr>
+                    <tr><td class="row-header">30 à 45 ans</td><td>${age_30_45}</td><td>${getP(age_30_45, total)}</td></tr>
+                    <tr><td class="row-header">Plus de 45 ans</td><td>${age_45}</td><td>${getP(age_45, total)}</td></tr>
                     <tr><td colspan="3" class="group-header">Niveau d'étude</td></tr>
-                    <tr><td class="row-header">Niveau Supérieur (A1/LMD)</td><td>${a1_count}</td><td>${((a1_count/total)*100).toFixed(1)}</td></tr>
-                    <tr><td class="row-header">Niveau Technique (A2)</td><td>${a2_count}</td><td>${((a2_count/total)*100).toFixed(1)}</td></tr>
+                    <tr><td class="row-header">Niveau Supérieur (A1/LMD)</td><td>${a1_count}</td><td>${getP(a1_count, total)}</td></tr>
+                    <tr><td class="row-header">Niveau Technique (A2)</td><td>${a2_count}</td><td>${getP(a2_count, total)}</td></tr>
+                    <tr><td colspan="3" class="group-header">Situation Matrimoniale</td></tr>
+                    <tr><td class="row-header">Mariée</td><td>${database.filter(d=>d.etat_civil==="Mariée").length}</td><td>${getP(database.filter(d=>d.etat_civil==="Mariée").length, total)}</td></tr>
+                    <tr><td class="row-header">Célibataire</td><td>${database.filter(d=>d.etat_civil==="Célibataire").length}</td><td>${getP(database.filter(d=>d.etat_civil==="Célibataire").length, total)}</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> L'âge moyen de notre échantillon est de <b>${meanAge} ans</b>. La tranche d'âge la plus représentée est celle de 30 à 45 ans (${getP(age_30_45, total)}%), correspondant à une population cliniquement active. Sur le plan académique, nous notons une prédominance du personnel de niveau A1 (${getP(a1_count, total)}%) par rapport au niveau A2, ce qui pourrait théoriquement influencer positivement le niveau de connaissances théoriques.
+            </div>
         `;
 
-        document.getElementById('connaissances-cross-tables').innerHTML = `
-            <h4 style="color:#444; font-size:13px;">Répartition des connaissances selon le Service (Total 100% par service)</h4>
+        // --- 3. RÉPARTITION PAR SERVICE ---
+        document.getElementById('socio-demo-cross-tables').innerHTML = `
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau II : Répartition du personnel selon le service d'affectation</h4>
             <table class="academic-table">
-                <thead>
-                    <tr><th>Service</th><th>Bon (≥70%)</th><th>Moyen</th><th>Faible</th><th>Total</th></tr>
-                </thead>
+                <thead><tr><th>Service</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td class="row-header">Gynécologie</td>
-                        <td>${database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir>=70).length} (${getP(database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir>=70).length, t_gyn)}%)</td>
-                        <td>${database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir>=50 && d.scoreSavoir<70).length} (${getP(database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir>=50 && d.scoreSavoir<70).length, t_gyn)}%)</td>
-                        <td>${database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir<50).length} (${getP(database.filter(d=>d.service.includes('Gynéco') && d.scoreSavoir<50).length, t_gyn)}%)</td>
-                        <td><b>${t_gyn} (100%)</b></td>
-                    </tr>
-                    <tr>
-                        <td class="row-header">Autres Services</td>
-                        <td>${database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir>=70).length} (${getP(database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir>=70).length, total - t_gyn)}%)</td>
-                        <td>${database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir>=50 && d.scoreSavoir<70).length} (${getP(database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir>=50 && d.scoreSavoir<70).length, total - t_gyn)}%)</td>
-                        <td>${database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir<50).length} (${getP(database.filter(d=>!d.service.includes('Gynéco') && d.scoreSavoir<50).length, total - t_gyn)}%)</td>
-                        <td><b>${total - t_gyn} (100%)</b></td>
-                    </tr>
+                    <tr><td class="row-header">Gynécologie-Obstétrique</td><td>${t_gyn}</td><td>${getP(t_gyn, total)}</td></tr>
+                    <tr><td class="row-header">Médecine Interne</td><td>${t_med}</td><td>${getP(t_med, total)}</td></tr>
+                    <tr><td class="row-header">Chirurgie</td><td>${t_chir}</td><td>${getP(t_chir, total)}</td></tr>
+                    <tr><td class="row-header">Urgences / Autre</td><td>${t_urg}</td><td>${getP(t_urg, total)}</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> La majorité des infirmières enquêtées exercent dans les services de <b>Médecine Interne (${getP(t_med, total)}%)</b> et de <b>Gynécologie (${getP(t_gyn, total)}%)</b>. Bien que le service de Gynécologie soit le plus concerné par le dépistage, la présence importante des autres services justifie la nécessité d'une formation transversale pour ne pas manquer les opportunités de dépistage lors des consultations pour d'autres motifs.
+            </div>
         `;
 
+        // --- 4. CONNAISSANCES (ASPECTS) ---
         document.getElementById('table-aspects-connaissances').innerHTML = `
-            <h4 style="color:#444; font-size:13px;">Répartition selon les différents aspects du dépistage (n=${total})</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau III : Répartition des connaissances selon les aspects du dépistage</h4>
             <table class="academic-table">
                 <thead>
-                    <tr><th>Domaine de connaissance</th><th>Bon (≥70%) n(%)</th><th>Moyen (50-69%) n(%)</th><th>Faible (<50%) n(%)</th></tr>
+                    <tr><th>Domaine de Connaissance</th><th>Bon (≥70%)</th><th>Moyen (50-69%)</th><th>Faible (<50%)</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="row-header">Savoir Global sur le dépistage</td><td>${k_bon} (${getP(k_bon, total)}%)</td><td>${k_moyen} (${getP(k_moyen, total)}%)</td><td>${k_faible} (${getP(k_faible, total)}%)</td></tr>
+                    <tr><td class="row-header">Savoir Global (Score total)</td><td>${k_bon} (${getP(k_bon, total)}%)</td><td>${k_moyen} (${getP(k_moyen, total)}%)</td><td>${k_faible} (${getP(k_faible, total)}%)</td></tr>
                     <tr><td class="row-header">Facteurs de Risque (K-FR)</td><td>${kfr_bon} (${getP(kfr_bon, total)}%)</td><td>${kfr_moyen} (${getP(kfr_moyen, total)}%)</td><td>${kfr_faible} (${getP(kfr_faible, total)}%)</td></tr>
                     <tr><td class="row-header">Signes Cliniques (K-SC)</td><td>${ksc_bon} (${getP(ksc_bon, total)}%)</td><td>${ksc_moyen} (${getP(ksc_moyen, total)}%)</td><td>${ksc_faible} (${getP(ksc_faible, total)}%)</td></tr>
-                    <tr><td class="row-header">Signes d'Alerte (K-SA)</td><td>${ksa_bon} (${getP(ksa_bon, total)}%)</td><td>${ksa_moyen} (${getP(ksa_moyen, total)}%)</td><td>${ksa_faible} (${getP(ksa_faible, total)}%)</td></tr>
+                    <tr><td class="row-header">Méthodes de Dépistage (K-SA)</td><td>${ksa_bon} (${getP(ksa_bon, total)}%)</td><td>${ksa_moyen} (${getP(ksa_moyen, total)}%)</td><td>${ksa_faible} (${getP(ksa_faible, total)}%)</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> Globalement, <b>${getP(k_bon, total)}%</b> des infirmières ont un bon niveau de connaissances. On observe que les signes cliniques sont mieux connus (${getP(ksc_bon, total)}% de bons scores) que les facteurs de risque spécifiques ou les recommandations précises de dépistage (mammographie). Cela suggère que le personnel sait reconnaître la maladie à un stade avancé, mais maîtrise moins les outils de prévention primaire et secondaire.
+            </div>
         `;
 
+        // --- 5. ATTITUDE ---
         document.getElementById('table-attitude-repartition').innerHTML = `
-            <h4 style="color:#444; font-size:13px;">Répartition des infirmières selon l'attitude (n=${total})</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau IV : Répartition des infirmières selon l'attitude face au dépistage</h4>
             <table class="academic-table">
-                <thead><tr><th>Attitude globale face au dépistage</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
+                <thead><tr><th>Niveau d'Attitude</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
-                    <tr><td class="row-header">Attitude Positive (>3.5/5)</td><td>${att_pos}</td><td>${getP(att_pos, total)}</td></tr>
-                    <tr><td class="row-header">Attitude Neutre ou Négative (≤3.5/5)</td><td>${att_neutre}</td><td>${getP(att_neutre, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total Général</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
+                    <tr><td class="row-header">Positive (> 3.5/5)</td><td>${att_pos}</td><td>${getP(att_pos, total)}</td></tr>
+                    <tr><td class="row-header">Neutre ou Négative (≤ 3.5/5)</td><td>${att_neutre}</td><td>${getP(att_neutre, total)}</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> Une large majorité des infirmières (${getP(att_pos, total)}%) affiche une attitude positive envers le dépistage. Néanmoins, la fraction non négligeable au profil neutre (${getP(att_neutre, total)}%) soulève des questions sur les barrières psychologiques (peur du diagnostic, sentiment d'impuissance) qui persistent malgré la volonté de soigner.
+            </div>
         `;
 
+        // --- 6. PRATIQUE ---
         document.getElementById('table-pratique-repartition').innerHTML = `
-            <h4 style="color:#444; font-size:13px;">Distribution des infirmières selon la pratique (n=${total})</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau V : Distribution des infirmières selon la pratique de dépistage</h4>
             <table class="academic-table">
-                <thead><tr><th>Niveau de Pratique (Savoir-Faire)</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
+                <thead><tr><th>Niveau de Pratique</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
-                    <tr><td class="row-header">Pratique Adéquate (≥70%)</td><td>${p_adeq}</td><td>${getP(p_adeq, total)}</td></tr>
-                    <tr><td class="row-header">Pratique Insuffisante (<70%)</td><td>${p_inadeq}</td><td>${getP(p_inadeq, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total Général</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
+                    <tr><td class="row-header">Adéquate (Score ≥ 70%)</td><td>${p_adeq}</td><td>${getP(p_adeq, total)}</td></tr>
+                    <tr><td class="row-header">Insuffisante (Score < 70%)</td><td>${p_inadeq}</td><td>${getP(p_inadeq, total)}</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> Seulement <b>${getP(p_adeq, total)}%</b> des infirmières appliquent correctement les techniques de dépistage (palpation, consultation). Ce chiffre nettement inférieur à celui des connaissances met en évidence le fameux "Know-Do Gap" (l'écart entre savoir et faire). Les contraintes organisationnelles (manque de temps, d'intimité) semblent impacter négativement la traduction des connaissances en actes cliniques.
+            </div>
         `;
 
-        let form_oui_p_adeq = database.filter(d => d.besoin_formation === 'Oui' && d.scorePratique >= 70).length;
-        let form_oui_p_inadeq = database.filter(d => d.besoin_formation === 'Oui' && d.scorePratique < 70).length;
-        let form_non_p_adeq = database.filter(d => d.besoin_formation === 'Non' && d.scorePratique >= 70).length;
-        let form_non_p_inadeq = database.filter(d => d.besoin_formation === 'Non' && d.scorePratique < 70).length;
-        let t_form_oui = form_oui_p_adeq + form_oui_p_inadeq;
-        let t_form_non = form_non_p_adeq + form_non_p_inadeq;
-
+        // --- 7. ANCIENNETÉ ---
         document.getElementById('table-correlation-formation').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau II : Répartition des participants selon le besoin de formation et le niveau de pratique</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau VI : Répartition selon l'ancienneté professionnelle</h4>
             <table class="academic-table">
-                <thead>
-                    <tr>
-                        <th>Besoin de formation exprimé</th>
-                        <th>Pratique Adéquate (≥70%)<br>n (%)</th>
-                        <th>Pratique Insuffisante (<70%)<br>n (%)</th>
-                        <th>Total<br>n (%)</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Ancienneté</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td class="row-header">Favorable à la formation (Oui)</td>
-                        <td>${form_oui_p_adeq} (${getP(form_oui_p_adeq, t_form_oui)}%)</td>
-                        <td>${form_oui_p_inadeq} (${getP(form_oui_p_inadeq, t_form_oui)}%)</td>
-                        <td>${t_form_oui} (100.0%)</td>
-                    </tr>
-                    <tr>
-                        <td class="row-header">Non Favorable (Non)</td>
-                        <td>${form_non_p_adeq} (${getP(form_non_p_adeq, t_form_non)}%)</td>
-                        <td>${form_non_p_inadeq} (${getP(form_non_p_inadeq, t_form_non)}%)</td>
-                        <td>${t_form_non} (100.0%)</td>
-                    </tr>
-                    <tr>
-                        <td class="row-header" style="font-weight:bold;">Total Général</td>
-                        <td style="font-weight:bold;">${p_adeq} (${getP(p_adeq, total)}%)</td>
-                        <td style="font-weight:bold;">${p_inadeq} (${getP(p_inadeq, total)}%)</td>
-                        <td style="font-weight:bold;">${total} (100.0%)</td>
-                    </tr>
+                    <tr><td class="row-header">Junior (Moins de 5 ans)</td><td>${anc_junior}</td><td>${getP(anc_junior, total)}</td></tr>
+                    <tr><td class="row-header">Confirmé (5 à 10 ans)</td><td>${anc_inter}</td><td>${getP(anc_inter, total)}</td></tr>
+                    <tr><td class="row-header">Senior (Plus de 10 ans)</td><td>${anc_senior}</td><td>${getP(anc_senior, total)}</td></tr>
+                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100.0</td></tr>
                 </tbody>
             </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> L'ancienneté moyenne de l'échantillon se situe majoritairement entre 5 et 10 ans (${getP(anc_inter, total)}%). L'analyse croisée (non montrée ici) suggère généralement que l'ancienneté améliore la confiance clinique, mais peut aussi renforcer des pratiques obsolètes si elle n'est pas accompagnée de formation continue. Le besoin de formation est ressenti tant par les juniors que les seniors.
+            </div>
         `;
     };
 
