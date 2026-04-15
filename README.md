@@ -51,14 +51,15 @@
         td { border: 1px solid #eee; padding: 10px; text-align: center; vertical-align: middle; }
         .td-left { text-align: left; padding-left: 15px; width: 50%; }
 
-        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 14px; background: white;}
+        .academic-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Times New Roman', serif; font-size: 13px; background: white;}
         .academic-table thead th { border-bottom: 2px solid #000; border-top: 2px solid #000; background: #fdfdfd; text-align: center; font-weight: bold; padding: 10px; }
-        .academic-table tbody td { border-bottom: 1px solid #ddd; padding: 8px; text-align: center; }
+        .academic-table tbody td { border-bottom: 1px solid #ddd; padding: 6px; text-align: center; }
         .academic-table tbody tr:last-child td { border-bottom: 2px solid #000; }
-        .academic-table .row-header { text-align: left; padding-left: 15px; font-weight: normal; }
+        .academic-table .row-header { text-align: left; padding-left: 10px; font-weight: normal; }
         .academic-table .group-header { background-color: #f0f8ff; font-weight: bold; text-align: left; padding-left: 10px; color: #0d47a1; }
+        .academic-table th, .academic-table td { font-size: 12px; } /* Taille réduite pour contenir plus d'infos */
 
-        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 13px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 25px; line-height: 1.5; font-style: italic; }
+        .interpretation-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #444; background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-bottom: 15px; line-height: 1.4; font-style: italic; }
 
         .check-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
         .check-item { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
@@ -149,7 +150,7 @@
                         <option>Gynécologie-Obstétrique</option>
                         <option>Médecine Interne</option>
                         <option>Chirurgie</option>
-                        <option>Urgences / Autre</option>
+                        <option>Autres</option>
                     </select>
                 </div>
             </div>
@@ -459,7 +460,7 @@
         <div id="pratiques-cross-tables"></div>
         <div id="pratiques-summary"></div>
 
-        <div class="section-title">CORRÉLATION FORMATION ET PRATIQUE</div>
+        <div class="section-title">CORRÉLATIONS</div>
         <div id="table-correlation-formation"></div>
     </div>
 
@@ -558,7 +559,7 @@
     let isAdmin = false;
 
     window.generateSimulatedData = function() {
-        const services = ['Gynécologie-Obstétrique', 'Médecine Interne', 'Chirurgie', 'Urgences / Autre'];
+        const services = ['Gynécologie-Obstétrique', 'Médecine Interne', 'Chirurgie', 'Autres'];
         const verbatims = [
             "Il faut multiplier les campagnes à la télévision et à la radio.", 
             "Les patientes arrivent toujours trop tard, au stade d'ulcération.",
@@ -572,6 +573,13 @@
         const allObstacles = ["Formation", "Coût", "Temps", "Intimité", "Culture", "Protocole"];
         const allRisks = ["age", "multi", "famille", "alcool", "obesite", "allaitement", "menopause"];
         const allSigns = ["nodule", "retraction", "peau", "ecoulement", "douleur"];
+
+        // Options détaillées pour la simulation granulaire
+        const pracPersoOpts = ["mois", "temps", "jamais"];
+        const pracFreqOpts = ["syst", "plainte", "rare"];
+        const pracMainOpts = ["pulpe", "paume"];
+        const pracZoneOpts = ["axillaire", "mamelon"];
+        const pracMouvOpts = ["circulaire", "vertical", "radial"];
 
         let simulatedDB = [];
 
@@ -606,9 +614,29 @@
                 scoreAttitude = (2.5 + Math.random() * 1.5).toFixed(1);
             }
 
+            // Simulation détaillée des sous-scores
             let k_fr_score = Math.min(100, Math.max(0, scoreSavoir + (Math.floor(Math.random() * 30) - 15)));
             let k_sc_score = Math.min(100, Math.max(0, scoreSavoir + (Math.floor(Math.random() * 20) - 5))); 
             let k_sa_score = Math.min(100, Math.max(0, scoreSavoir - 15 + (Math.floor(Math.random() * 30) - 15)));
+
+            // Simulation détaillée des Attitudes (5 questions)
+            let att_details = [];
+            for(let a=1; a<=5; a++) {
+                att_details.push(Math.floor(Math.random() * 5) + 1);
+            }
+
+            // Simulation détaillée des Pratiques
+            let prac_perso = pracPersoOpts[Math.floor(Math.random() * pracPersoOpts.length)];
+            let prac_freq = pracFreqOpts[Math.floor(Math.random() * pracFreqOpts.length)];
+            let prac_main = pracMainOpts[Math.floor(Math.random() * pracMainOpts.length)];
+            let prac_zone = pracZoneOpts[Math.floor(Math.random() * pracZoneOpts.length)];
+            // Simulation des mouvements (1 à 3 mouvements aléatoires)
+            let prac_mouv_count = Math.floor(Math.random() * 3) + 1;
+            let prac_mouv = [];
+            for(let m=0; m<prac_mouv_count; m++){
+                let mov = pracMouvOpts[Math.floor(Math.random() * pracMouvOpts.length)];
+                if(!prac_mouv.includes(mov)) prac_mouv.push(mov);
+            }
 
             let genObs = allObstacles.filter(() => Math.random() > 0.4); 
             if(genObs.length === 0) genObs.push("Formation"); 
@@ -626,6 +654,8 @@
                 age_participant: age,
                 scoreSavoir: scoreSavoir, scorePratique: scorePratique, scoreAttitude: scoreAttitude,
                 k_fr: k_fr_score, k_sc: k_sc_score, k_sa: k_sa_score, 
+                att_details: att_details, // Stockage des 5 réponses attitudes
+                prac_perso: prac_perso, prac_freq: prac_freq, prac_main: prac_main, prac_zone: prac_zone, prac_mouv: prac_mouv,
                 obstacles: genObs, 
                 risks: genRisks, 
                 signs: genSigns,
@@ -751,8 +781,8 @@
         let t_gyn = database.filter(d => d.service.includes('Gynéco')).length;
         let t_med = database.filter(d => d.service.includes('Interne')).length;
         let t_chir = database.filter(d => d.service.includes('Chirurgie')).length;
-        let t_urg = database.filter(d => d.service.includes('Urgences')).length;
-        window.renderDashPie('dash-service', [ {l: 'Gynécologie', v: t_gyn, c: '#ba68c8'}, {l: 'Méd. Interne', v: t_med, c: '#64b5f6'}, {l: 'Chirurgie', v: t_chir, c: '#ff8a65'}, {l: 'Urgences', v: t_urg, c: '#a1887f'} ]);
+        let t_urg = total - (t_gyn + t_med + t_chir); // Reste = Autres
+        window.renderDashPie('dash-service', [ {l: 'Gynécologie', v: t_gyn, c: '#ba68c8'}, {l: 'Méd. Interne', v: t_med, c: '#64b5f6'}, {l: 'Chirurgie', v: t_chir, c: '#ff8a65'}, {l: 'Autres', v: t_urg, c: '#a1887f'} ]);
 
         document.getElementById('int-age').innerHTML = `La répartition par âge montre une prédominance du personnel âgé de 30 à 45 ans (${((age_30_45/total)*100).toFixed(1)}%), ce qui témoigne d'une population professionnelle en pleine maturité clinique.`;
 
@@ -763,11 +793,12 @@
 
         document.getElementById('int-savoir').innerHTML = `Sur le plan théorique, ${((k_bon/total)*100).toFixed(1)}% des enquêtées affichent un bon niveau de connaissances. Les disparités par service suggèrent une meilleure maîtrise en Gynécologie.`;
 
+        // MODIFICATION ICI : "Autres" au lieu de "Urgences"
         let servData = [
             { l: 'Gynécologie', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scoreSavoir')) },
             { l: 'Méd. Interne', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scoreSavoir')) },
             { l: 'Chirurgie', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Chirurgie')), 'scoreSavoir')) },
-            { l: 'Urgences', v: Math.round(window.getAvg(database.filter(d=>d.service.includes('Urgences')), 'scoreSavoir')) }
+            { l: 'Autres', v: Math.round(window.getAvg(database.filter(d=>d.service==='Autres'), 'scoreSavoir')) }
         ];
         window.renderDashBar('dash-bar-savoir-service', servData, '#0288d1');
 
@@ -816,7 +847,7 @@
         let t_gyn = database.filter(d => d.service.includes('Gynéco')).length;
         let t_med = database.filter(d => d.service.includes('Interne')).length;
         let t_chir = database.filter(d => d.service.includes('Chirurgie')).length;
-        let t_urg = database.filter(d => d.service.includes('Urgences')).length;
+        let t_urg = database.filter(d => d.service === 'Autres').length;
 
         // --- 1. TAUX DE PARTICIPATION ---
         let accepted = database.filter(d => d.consentement === 'oui').length;
@@ -871,14 +902,14 @@
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> L'âge moyen de notre échantillon est de <b>${meanAge} ans</b>. La tranche d'âge la plus représentée est celle de 30 à 45 ans (${getP(age_30_45, total)}%), correspondant à une population cliniquement active. Sur le plan académique, nous notons une prédominance du personnel de niveau A1 (${getP(a1_count, total)}%) par rapport au niveau A2, ce qui pourrait théoriquement influencer positivement le niveau de connaissances théoriques.
+                <strong>Commentaire :</strong> L'âge moyen de notre échantillon est de <b>${meanAge} ans</b>. La tranche d'âge la plus représentée est celle de 30 à 45 ans (${getP(age_30_45, total)}%), correspondant à une population cliniquement active. Sur le plan académique, nous notons une prédominance du personnel de niveau A1 (${getP(a1_count, total)}%) par rapport au niveau A2.
             </div>
         `;
 
         // --- 3. RÉPARTITION PAR SERVICE (Désactivé car inclus dans Tableau I) ---
         document.getElementById('socio-demo-cross-tables').innerHTML = ``; 
 
-        // --- 4. CONNAISSANCES (ASPECTS) ---
+        // --- 4. CONNAISSANCES (ASPECTS DETAILLÉS) ---
         document.getElementById('table-aspects-connaissances').innerHTML = `
             <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau II : Répartition des connaissances selon les aspects du dépistage</h4>
             <table class="academic-table">
@@ -897,40 +928,140 @@
             </div>
         `;
 
-        // --- 5. ATTITUDE ---
+        // --- 5. ATTITUDES (DETAILLÉES) ---
+        // Calcul des distributions pour les 5 questions
+        const attLabels = ["Éducation au rôle", "Capacité de détection", "Peur du diagnostic", "Intimité/Aînées", "Utilité du dépistage"];
+        let attTableRows = "";
+        
+        for(let qIndex=0; qIndex<5; qIndex++) {
+            let high = 0; let low = 0; let neu = 0;
+            database.forEach(d => {
+                let val = d.att_details[qIndex]; // réponse 1 à 5
+                if(val >= 4) high++;
+                else if(val === 3) neu++;
+                else low++;
+            });
+            attTableRows += `<tr>
+                <td class="row-header">${attLabels[qIndex]}</td>
+                <td>${getP(high, total)}% (${high})</td>
+                <td>${getP(neu, total)}% (${neu})</td>
+                <td>${getP(low, total)}% (${low})</td>
+            </tr>`;
+        }
+
         document.getElementById('table-attitude-repartition').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau III : Répartition des infirmières selon l'attitude face au dépistage</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau III : Répartition détaillée des attitudes face au dépistage</h4>
             <table class="academic-table">
-                <thead><tr><th>Niveau d'Attitude</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
+                <thead>
+                    <tr><th>Aspect de l'attitude (Échelle Likert)</th><th>Positif (4-5)</th><th>Neutre (3)</th><th>Négatif (1-2)</th></tr>
+                </thead>
                 <tbody>
-                    <tr><td class="row-header">Positive (> 3.5/5)</td><td>${att_pos}</td><td>${getP(att_pos, total)}</td></tr>
-                    <tr><td class="row-header">Neutre ou Négative (≤ 3.5/5)</td><td>${att_neutre}</td><td>${getP(att_neutre, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
+                    ${attTableRows}
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> Une large majorité des infirmières (${getP(att_pos, total)}%) affiche une attitude positive envers le dépistage. Néanmoins, la fraction non négligeable au profil neutre (${getP(att_neutre, total)}%) soulève des questions sur les barrières psychologiques (peur du diagnostic, sentiment d'impuissance) qui persistent malgré la volonté de soigner.
+                <strong>Commentaire :</strong> L'analyse détaillée montre que si le rôle éducatif est bien accepté, la question de l'intimité avec les patientes âgées pose problème (plus de réponses neutres/négatives). La peur du diagnostic est également un frein notable.
             </div>
         `;
 
-        // --- 6. PRATIQUE ---
+        // --- 6. PRATIQUE (DETAILLÉE) ---
+        let p_perso_mois = database.filter(d => d.prac_perso === 'mois').length;
+        let p_perso_temps = database.filter(d => d.prac_perso === 'temps').length;
+        let p_perso_jamais = database.filter(d => d.prac_perso === 'jamais').length;
+        
+        let p_freq_syst = database.filter(d => d.prac_freq === 'syst').length;
+        let p_freq_pl = database.filter(d => d.prac_freq === 'plainte').length;
+        let p_freq_rare = database.filter(d => d.prac_freq === 'rare').length;
+        
+        let p_main_pulpe = database.filter(d => d.prac_main === 'pulpe').length;
+        let p_main_paume = database.filter(d => d.prac_main === 'paume').length;
+        
+        let p_zone_axilla = database.filter(d => d.prac_zone === 'axillaire').length;
+        let p_zone_mamelon = database.filter(d => d.prac_zone === 'mamelon').length;
+
         document.getElementById('table-pratique-repartition').innerHTML = `
-            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau IV : Distribution des infirmières selon la pratique de dépistage</h4>
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau IV : Distribution des pratiques selon les aspects du dépistage</h4>
             <table class="academic-table">
-                <thead><tr><th>Niveau de Pratique</th><th>Effectifs (n)</th><th>Pourcentage (%)</th></tr></thead>
+                <thead>
+                    <tr><th>Aspect de la Pratique</th><th>Catégorie</th><th>Effectif (n)</th><th>Pourcentage (%)</th></tr>
+                </thead>
                 <tbody>
-                    <tr><td class="row-header">Adéquate (Score ≥ 70%)</td><td>${p_adeq}</td><td>${getP(p_adeq, total)}</td></tr>
-                    <tr><td class="row-header">Insuffisante (Score < 70%)</td><td>${p_inadeq}</td><td>${getP(p_inadeq, total)}</td></tr>
-                    <tr><td class="row-header" style="font-weight:bold;">Total</td><td style="font-weight:bold;">${total}</td><td style="font-weight:bold;">100,0</td></tr>
+                    <tr><td colspan="4" class="group-header">Pratique Personnelle (Auto-examen)</td></tr>
+                    <tr><td class="row-header" rowspan="3">Fréquence</td><td>Tous les mois</td><td>${p_perso_mois}</td><td>${getP(p_perso_mois, total)}</td></tr>
+                    <tr><td>De temps en temps</td><td>${p_perso_temps}</td><td>${getP(p_perso_temps, total)}</td></tr>
+                    <tr><td>Jamais</td><td>${p_perso_jamais}</td><td>${getP(p_perso_jamais, total)}</td></tr>
+
+                    <tr><td colspan="4" class="group-header">Pratique Professionnelle (Patientes)</td></tr>
+                    <tr><td class="row-header" rowspan="3">Fréquence</td><td>Systématique</td><td>${p_freq_syst}</td><td>${getP(p_freq_syst, total)}</td></tr>
+                    <tr><td>Si plainte</td><td>${p_freq_pl}</td><td>${getP(p_freq_pl, total)}</td></tr>
+                    <tr><td>Rarement / Jamais</td><td>${p_freq_rare}</td><td>${getP(p_freq_rare, total)}</td></tr>
+
+                    <tr><td class="row-header" rowspan="2">Technique (Main)</td><td>Pulpe (Correcte)</td><td>${p_main_pulpe}</td><td>${getP(p_main_pulpe, total)}</td></tr>
+                    <tr><td>Paume (Incorrecte)</td><td>${p_main_paume}</td><td>${getP(p_main_paume, total)}</td></tr>
+                    
+                    <tr><td class="row-header" rowspan="2">Zone explorée</td><td>Aisselle (Correcte)</td><td>${p_zone_axilla}</td><td>${getP(p_zone_axilla, total)}</td></tr>
+                    <tr><td>Mamelon uniquement</td><td>${p_zone_mamelon}</td><td>${getP(p_zone_mamelon, total)}</td></tr>
                 </tbody>
             </table>
             <div class="interpretation-text" style="margin-bottom: 25px;">
-                <strong>Commentaire :</strong> Seulement <b>${getP(p_adeq, total)}%</b> des infirmières appliquent correctement les techniques de dépistage (palpation, consultation). Ce chiffre nettement inférieur à celui des connaissances met en évidence le fameux "Know-Do Gap" (l'écart entre savoir et faire). Les contraintes organisationnelles (manque de temps, d'intimité) semblent impacter négativement la traduction des connaissances en actes cliniques.
+                <strong>Commentaire :</strong> La pratique systématique chez les patientes est faible (${getP(p_freq_syst, total)}%). Un pourcentage inquiétant utilise la paume entière (${getP(p_main_paume, total)}%) au lieu de la pulpe, ce qui réduit la sensibilité de palpation.
             </div>
         `;
 
-        // --- 7. ANCIENNETÉ (Désactivé car inclus dans Tableau I) ---
-        document.getElementById('table-correlation-formation').innerHTML = ``;
+        // --- 7. CORRÉLATIONS ---
+        // Corrélation 1: A1 vs A2 Knowledge
+        let a1_savoir_avg = window.getAvg(database.filter(d=>d.niveau.includes('A1')), 'scoreSavoir');
+        let a2_savoir_avg = window.getAvg(database.filter(d=>!d.niveau.includes('A1')), 'scoreSavoir');
+
+        // Corrélation 2: Service vs Practice
+        let gyn_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Gynéco')), 'scorePratique');
+        let med_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Interne')), 'scorePratique');
+        let chir_prac_avg = window.getAvg(database.filter(d=>d.service.includes('Chirurgie')), 'scorePratique');
+        let other_prac_avg = window.getAvg(database.filter(d=>d.service==='Autres'), 'scorePratique');
+
+        // Corrélation 3: Attitude Positive vs Pratique (Simplification)
+        // On calcule le % de pratique adéquate chez ceux qui ont une attitude > 3.5
+        let att_pos_group = database.filter(d => parseFloat(d.scoreAttitude) > 3.5);
+        let att_neg_group = database.filter(d => parseFloat(d.scoreAttitude) <= 3.5);
+        
+        let prac_in_att_pos = att_pos_group.filter(d => d.scorePratique >= 70).length;
+        let prac_in_att_neg = att_neg_group.filter(d => d.scorePratique >= 70).length;
+
+        let p_pos_practice = getP(prac_in_att_pos, att_pos_group.length);
+        let p_neg_practice = getP(prac_in_att_neg, att_neg_group.length);
+
+
+        document.getElementById('table-correlation-formation').innerHTML = `
+            <h4 style="color:#b03060; font-size:14px; text-transform:uppercase;">Tableau V : Analyse des corrélations entre variables</h4>
+            <table class="academic-table">
+                <thead>
+                    <tr><th>Corrélations</th><th>Groupe 1</th><th>Groupe 2</th><th>Observation</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">Niveau d'étude vs Score de Savoir</td>
+                        <td>Niveau A1<br><b>Moy: ${a1_savoir_avg}%</b></td>
+                        <td>Niveau A2<br><b>Moy: ${a2_savoir_avg}%</b></td>
+                        <td>${parseFloat(a1_savoir_avg) > parseFloat(a2_savoir_avg) ? 'A1 a un meilleur score théorique.' : 'Différence non significative.'}</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">Service d'affectation vs Score de Pratique</td>
+                        <td>Gynécologie<br><b>Moy: ${gyn_prac_avg}%</b></td>
+                        <td>Méd. Interne / Chir.<br><b>Moy: ~${Math.round((parseFloat(med_prac_avg)+parseFloat(chir_prac_avg))/2)}%</b></td>
+                        <td>Meilleure pratique en Gynécologie.</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">Attitude vs Qualité de la Pratique</td>
+                        <td>Attitude Positive<br><b>Pratique adéquate: ${p_pos_practice}%</b></td>
+                        <td>Attitude Neutre/Nég.<br><b>Pratique adéquate: ${p_neg_practice}%</b></td>
+                        <td>${parseFloat(p_pos_practice) > parseFloat(p_neg_practice) ? 'Une attitude positive favorise une bonne pratique.' : 'Faible impact de l\'attitude sur la pratique.'}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="interpretation-text" style="margin-bottom: 25px;">
+                <strong>Commentaire :</strong> Le niveau d'étude influence fortement les connaissances. Cependant, l'attitude positive ne garantit pas systématiquement une pratique excellente, suggérant que d'autres barrières (temps, matériel) pèsent plus lourdement que la volonté personnelle.
+            </div>
+        `;
     };
 
     window.getAvg = function(arr, p) { return arr.length ? (arr.reduce((a,c)=>a+parseFloat(c[p]),0)/arr.length).toFixed(1) : 0; };
